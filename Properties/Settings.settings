@@ -1,0 +1,30 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WinMoss.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="strPerlLocation" Type="System.String" Scope="User">
+      <Value Profile="(Default)">c:\Perl\bin\perl.exe</Value>
+    </Setting>
+    <Setting Name="strMossScriptLocation" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="strLanguage" Type="System.String" Scope="User">
+      <Value Profile="(Default)">cpp</Value>
+    </Setting>
+    <Setting Name="strComment" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="numIgnoreCount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="strLastDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="strIgnoreFilter" Type="System.String" Scope="User">
+      <Value Profile="(Default)">stdafx</Value>
+    </Setting>
+    <Setting Name="chkboxDirs" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
