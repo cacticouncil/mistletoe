@@ -15,6 +15,7 @@ namespace WinMoss
     {
         private string strTempPath = "";
         private string strLastDir = "";
+        private int MaxPathLength;
         public WinMoss()
         {
             InitializeComponent();
@@ -36,6 +37,14 @@ namespace WinMoss
             {
                 Program.theDoc.MossScriptLocation = Directory.GetCurrentDirectory() + "\\mosswin.pl";
             }
+
+            // Thank you Internet: reflection
+            var maxPathField = typeof(Path).GetField("MaxPath",
+                System.Reflection.BindingFlags.Static |
+                System.Reflection.BindingFlags.GetField |
+                System.Reflection.BindingFlags.NonPublic);
+            // invoke the field gettor, which returns 260
+            MaxPathLength = (int)maxPathField.GetValue(null);
         }
 
         private bool bClosing = false;
@@ -184,9 +193,9 @@ namespace WinMoss
                 Directory.CreateDirectory(strTargetDir);
 
                 string[] strarrFiles = MultipleFileFilter(strDropData, SearchOption.AllDirectories);
-                
+
                 // make sure there are files in the directory
-                if(strarrFiles.Length == 0)
+                if (strarrFiles.Length == 0)
                     return false;
 
                 foreach (string strPath in strarrFiles)
@@ -203,7 +212,7 @@ namespace WinMoss
                     newPath = Path.Combine(strTargetDir, newPath.Replace("\\", "º"));
 
                     // copy files
-                    SmartCopy(strPath, newPath);
+                    SmarterCopy(strPath, newPath);
                 }
 
                 // add base item to list
@@ -236,7 +245,7 @@ namespace WinMoss
             strPathNoSpace = strPathNoSpace.Replace(Path.GetPathRoot(strPathNoSpace), "");
             strPathNoSpace = Path.Combine(strTempPath, strPathNoSpace);
             strPathNoSpaceNoTemp = strPathNoSpace.Replace(strTempPath, "");
-            SmartCopy(filename, strPathNoSpace);
+            SmarterCopy(filename, strPathNoSpace);
 
             if ((sender == lbStudentFiles || sender == btnAddStudentFiles) && lbStudentFiles.Items.Contains(strPathNoSpaceNoTemp) == false)
             {
@@ -344,7 +353,7 @@ namespace WinMoss
             {
                 strLastDir = fbd.SelectedPath;
                 strDirRoot = fbd.SelectedPath;
-                
+
                 if (cbtnDirectories.Checked == true && sender == btnAddStudentFiles)
                 {
                     AddFilteredDirectory(strDirRoot);
@@ -354,12 +363,12 @@ namespace WinMoss
                     string[] strarrFiles;
                     strarrFiles = MultipleFileFilter(strDirRoot, SearchOption.AllDirectories);
                     foreach (string strPath in strarrFiles)
-                    {   
+                    {
                         //unzip any archives
                         if (".zip" == Path.GetExtension(strPath))
                             AddZip(sender, strPath);
                         else
-                        AddCodeFile(sender, strPath);
+                            AddCodeFile(sender, strPath);
                     }
                 }
             }
@@ -423,6 +432,19 @@ namespace WinMoss
         {
             baseInstructions.Text = "Drag Base Files Here";
             lbBaseFiles.Items.Clear();
+        }
+
+        private bool SmarterCopy(string pathSrc, string pathDest)
+        {
+            if (pathSrc.Length > MaxPathLength || pathDest.Length > MaxPathLength)
+            {
+                rtxtOutput.SelectionColor = rtxtOutput.ForeColor;
+                rtxtOutput.AppendText("Skipping overlong source filename \""
+                    + pathSrc + "\"..." + Environment.NewLine);
+                return false;
+            }
+            SmartCopy(pathSrc, pathDest);
+            return true;
         }
 
         public static void SmartCopy(string pathSrc, string pathDest)
@@ -776,7 +798,7 @@ namespace WinMoss
                             break;
 
                         //relinquish the rest of our time slice
-                        Thread.Sleep(0); 
+                        Thread.Sleep(0);
                     }
 
                     //close our newly created files
@@ -823,7 +845,7 @@ namespace WinMoss
 
             closeWaitHandle.Set();
 
-            if(null == e.Result)
+            if (null == e.Result)
                 e.Result = uzi;
         }
 
@@ -917,7 +939,7 @@ namespace WinMoss
                     ard.FormClosed += new FormClosedEventHandler(ard_FormClosed);
                     ard.Show(this);
                 }
-                           
+
             }
             else
             {
@@ -933,7 +955,7 @@ namespace WinMoss
         {
             AutoRunDialog ard = sender as AutoRunDialog;
 
-            if(null != ard && ard.DialogResult == DialogResult.OK)
+            if (null != ard && ard.DialogResult == DialogResult.OK)
                 this.btnRunMoss.PerformClick();
         }
 
