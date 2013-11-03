@@ -1,8 +1,0 @@
-WinMoss Version 1.1 12/22/2009
-Features:
--Simplification of adding files to queries
--Support for unicode files
--Add and ignore file filtering
--Simplified support for multiple base files
--Support for moss arguments including -c, -d, -b, -m, -l
--Installer for both WinMoss and Perl
