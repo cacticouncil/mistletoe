@@ -2,7 +2,7 @@
 
 # Globals
 mainUiFile = "mistletoe.ui"
-configFile = "mistletoe.ini"
+configFile = "Mistletoe.ini"
 
 from PySide import QtCore, QtGui, QtUiTools
 
@@ -19,6 +19,7 @@ def loadUiWidget(uifilename, parent=None):
 if __name__ == "__main__":
     import sys, os, platform
     import ConfigParser
+    import tempfile
     app = QtGui.QApplication(sys.argv)
     MainWindow = loadUiWidget(mainUiFile)
 
@@ -27,7 +28,7 @@ if __name__ == "__main__":
         from win32com.shell import shellcon, shell
         homedir = "{}\\".format(shell.SHGetFolderPath(0, shellcon.CSIDL_APPDATA, 0, 0))
     elif platform.system() == 'Darwin':
-        homedir = "{}/".format(os.path.expanduser("~/Library/Preferences"))
+        homedir = "{}/".format(os.path.expanduser("~/Library"))
     elif os.name == 'posix':
         homedir = "{}/".format(os.path.expanduser("~"))
     else:
@@ -56,6 +57,8 @@ if __name__ == "__main__":
         config.set("config","IgnoreCount", str(MainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value()))
     if not config.has_option("config","Comment"):
         config.set("config","Comment", MainWindow.findChild(QtGui.QLineEdit, "commentEdit").text())
+    if not config.has_option("config", "AddPath"):
+        config.set("config", "AddPath", os.path.expanduser("~"))
 
     # Set the Gui to match the configuration
     MainWindow.findChild(QtGui.QLineEdit, "filterEdit").setText(config.get("config", "AddFilter"))
@@ -67,6 +70,10 @@ if __name__ == "__main__":
     languageBox = MainWindow.findChild(QtGui.QComboBox, "languageBox")
     languageBox.setCurrentIndex(languageBox.findText(config.get("config", "Language")))
 
+    # Set up path variables
+    addPath = config.get("config", "AddPath")
+    tempPath = os.path.join(tempfile.gettempdir(), "MistletoeTemp")
+    
     # Launch the GUI
     menubar = MainWindow.menubar
     MainWindow.show()
@@ -81,6 +88,7 @@ if __name__ == "__main__":
     config.set("config","Language", MainWindow.findChild(QtGui.QComboBox, "languageBox").currentText())
     config.set("config","IgnoreCount", MainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value())
     config.set("config","Comment", MainWindow.findChild(QtGui.QLineEdit, "commentEdit").text())
+    config.set("config", "AddPath", addPath)
     config.write(fileHandle)
     fileHandle.close()
     sys.exit()
