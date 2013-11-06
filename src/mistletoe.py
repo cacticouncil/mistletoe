@@ -1,95 +1,87 @@
 # -*- coding: utf-8 -*-
+import sys, types
 
-# Globals
-mainUiFile = "mistletoe.ui"
-configFile = "Mistletoe.ini"
+from PySide import QtGui
+import EtGui
 
-from PySide import QtCore, QtGui, QtUiTools
-
-# Load a UI widget from a file
-def loadUiWidget(uifilename, parent=None):
-    loader = QtUiTools.QUiLoader()
-    uifile = QtCore.QFile(uifilename)
-    uifile.open(QtCore.QFile.ReadOnly)
-    ui = loader.load(uifile, parent)
-    uifile.close()
-    return ui
+from actions import *
+import shared
 
 # Main routine (when called as main script)
-if __name__ == "__main__":
-    import sys, os, platform
-    import ConfigParser
-    import tempfile
-    app = QtGui.QApplication(sys.argv)
-    MainWindow = loadUiWidget(mainUiFile)
+def main():
+    config = shared.config
 
-    # Grab the app-specific data folder from the OS (if available.)
-    if platform.system() == 'Windows':
-        from win32com.shell import shellcon, shell
-        homedir = "{}\\".format(shell.SHGetFolderPath(0, shellcon.CSIDL_APPDATA, 0, 0))
-    elif platform.system() == 'Darwin':
-        homedir = "{}/".format(os.path.expanduser("~/Library"))
-    elif os.name == 'posix':
-        homedir = "{}/".format(os.path.expanduser("~"))
-    else:
-        QtGui.QMessageBox.information(None, "Modern OS plz!", "Can't determine home folder - exiting.", QtGui.QMessageBox.Ok)
-        sys.exit()
+    # Create the app wrapper and main window
+    app = QtGui.QApplication(sys.argv)
+    shared.mainWindow = EtGui.EtUiLoader().loadWidgetFile(shared.mainUiFile)
+    shared.mainWindow.closeEvent = types.MethodType(mainWindow_close, shared.mainWindow)
+    mainWindow = shared.mainWindow
 
     # Load the configuration file.
-    config = ConfigParser.ConfigParser()
-    config.read(homedir + configFile)
+    config.read(shared.configPath + shared.configFile)
 
     if not config.has_section("config"):
         config.add_section("config")
 
     # If any options are not set, load the defaults.
     if not config.has_option("config","AddFilter"):
-        config.set("config","AddFilter", MainWindow.findChild(QtGui.QLineEdit, "filterEdit").text())
+        config.set("config","AddFilter", mainWindow.findChild(QtGui.QLineEdit, "filterEdit").text())
     if not config.has_option("config","IgnoreFilter"):
-        config.set("config","IgnoreFilter", MainWindow.findChild(QtGui.QLineEdit, "ignoreEdit").text())
+        config.set("config","IgnoreFilter", mainWindow.findChild(QtGui.QLineEdit, "ignoreEdit").text())
     if not config.has_option("config","UseDirectories"):
-        config.set("config", "UseDirectories", str(MainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").isChecked()))
+        config.set("config", "UseDirectories", str(mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").isChecked()))
     if not config.has_option("config","RunAfterAdd"):
-        config.set("config", "RunAfterAdd", str(MainWindow.findChild(QtGui.QCheckBox, "runCheckBox").isChecked()))
+        config.set("config", "RunAfterAdd", str(mainWindow.findChild(QtGui.QCheckBox, "runCheckBox").isChecked()))
     if not config.has_option("config","Language"):
-        config.set("config","Language", MainWindow.findChild(QtGui.QComboBox, "languageBox").currentText())
+        config.set("config","Language", mainWindow.findChild(QtGui.QComboBox, "languageBox").currentText())
     if not config.has_option("config","IgnoreCount"):
-        config.set("config","IgnoreCount", str(MainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value()))
+        config.set("config","IgnoreCount", str(mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value()))
     if not config.has_option("config","Comment"):
-        config.set("config","Comment", MainWindow.findChild(QtGui.QLineEdit, "commentEdit").text())
+        config.set("config","Comment", mainWindow.findChild(QtGui.QLineEdit, "commentEdit").text())
     if not config.has_option("config", "AddPath"):
-        config.set("config", "AddPath", os.path.expanduser("~"))
+        config.set("config", "AddPath", shared.addPath)
 
     # Set the Gui to match the configuration
-    MainWindow.findChild(QtGui.QLineEdit, "filterEdit").setText(config.get("config", "AddFilter"))
-    MainWindow.findChild(QtGui.QLineEdit, "ignoreEdit").setText(config.get("config", "IgnoreFilter"))
-    MainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").setChecked(config.get("config", "UseDirectories").lower() == 'true')
-    MainWindow.findChild(QtGui.QCheckBox, "runCheckBox").setChecked(config.get("config", "RunAfterAdd").lower() == 'true')
-    MainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").setValue(config.getint("config", "IgnoreCount"))
-    MainWindow.findChild(QtGui.QLineEdit, "commentEdit").setText(config.get("config", "Comment"))
-    languageBox = MainWindow.findChild(QtGui.QComboBox, "languageBox")
+    mainWindow.findChild(QtGui.QLineEdit, "filterEdit").setText(config.get("config", "AddFilter"))
+    mainWindow.findChild(QtGui.QLineEdit, "ignoreEdit").setText(config.get("config", "IgnoreFilter"))
+    mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").setChecked(config.get("config", "UseDirectories").lower() == 'true')
+    mainWindow.findChild(QtGui.QCheckBox, "runCheckBox").setChecked(config.get("config", "RunAfterAdd").lower() == 'true')
+    mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").setValue(config.getint("config", "IgnoreCount"))
+    mainWindow.findChild(QtGui.QLineEdit, "commentEdit").setText(config.get("config", "Comment"))
+    languageBox = mainWindow.findChild(QtGui.QComboBox, "languageBox")
     languageBox.setCurrentIndex(languageBox.findText(config.get("config", "Language")))
+    shared.addPath = config.get("config", "AddPath")
 
-    # Set up path variables
-    addPath = config.get("config", "AddPath")
-    tempPath = os.path.join(tempfile.gettempdir(), "MistletoeTemp")
-    
-    # Launch the GUI
-    menubar = MainWindow.menubar
-    MainWindow.show()
+    # Connect Gui buttons to actions
+    mainWindow.findChild(QtGui.QAction, "actionExit").triggered.connect(actionExit_trigger)
+    mainWindow.findChild(QtGui.QAction, "actionSettings").triggered.connect(actionSettings_trigger)
+
+    studentFileList = mainWindow.findChild(EtGui.EtListWidget, "studentFileList")
+    studentFileList.dragEnterEvent = studentFileList.dragMoveEvent = types.MethodType(fileList_drag, studentFileList)
+    studentFileList.dropEvent = types.MethodType(fileList_drop, studentFileList)
+    studentFileList.setAcceptDrops(True)
+
+    baseFileList = mainWindow.findChild(EtGui.EtListWidget, "baseFileList")
+    baseFileList.dragEnterEvent = baseFileList.dragMoveEvent = types.MethodType(fileList_drag, baseFileList)
+    baseFileList.dropEvent = types.MethodType(fileList_drop, baseFileList)
+    baseFileList.setAcceptDrops(True)
+
+    mainWindow.findChild(QtGui.QPushButton, "addStudentButton").clicked.connect(addStudentButton_click)
+    mainWindow.findChild(QtGui.QPushButton, "clearStudentButton").clicked.connect(clearStudentButton_click)
+    mainWindow.findChild(QtGui.QPushButton, "addBaseButton").clicked.connect(addBaseButton_click)
+    mainWindow.findChild(QtGui.QPushButton, "clearBaseButton").clicked.connect(clearBaseButton_click)
+
+    mainWindow.findChild(QtGui.QPushButton, "runQueryButton").clicked.connect(runQueryButton_click)
+    mainWindow.findChild(QtGui.QPushButton, "saveQueryButton").clicked.connect(saveQueryButton_click)
+    mainWindow.findChild(QtGui.QPushButton, "clearQueryButton").clicked.connect(clearQueryButton_click)
+    mainWindow.findChild(QtGui.QPushButton, "saveOutputButton").clicked.connect(saveOutputButton_click)
+    mainWindow.findChild(QtGui.QPushButton, "clearOutputButton").clicked.connect(clearOutputButton_click)
+
+    # Launch the Gui
+    mainWindow.show()
     app.exec_()
-
-    # Save the configuration file
-    fileHandle = open(homedir + configFile, 'w')
-    config.set("config","AddFilter", MainWindow.findChild(QtGui.QLineEdit, "filterEdit").text())
-    config.set("config","IgnoreFilter", MainWindow.findChild(QtGui.QLineEdit, "ignoreEdit").text())
-    config.set("config", "UseDirectories", MainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").isChecked())
-    config.set("config", "RunAfterAdd", MainWindow.findChild(QtGui.QCheckBox, "runCheckBox").isChecked())
-    config.set("config","Language", MainWindow.findChild(QtGui.QComboBox, "languageBox").currentText())
-    config.set("config","IgnoreCount", MainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value())
-    config.set("config","Comment", MainWindow.findChild(QtGui.QLineEdit, "commentEdit").text())
-    config.set("config", "AddPath", addPath)
-    config.write(fileHandle)
-    fileHandle.close()
     sys.exit()
+
+if __name__ == "__main__":
+    main()
     

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>Mistletoe</class>
- <widget class="QMainWindow" name="Mistletoe">
+ <widget class="EtMainWindow" name="Mistletoe">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -50,7 +50,7 @@
     <property name="title">
      <string>Code</string>
     </property>
-    <widget class="QListWidget" name="studentFileList">
+    <widget class="EtListWidget" name="studentFileList">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -59,8 +59,35 @@
        <height>191</height>
       </rect>
      </property>
+     <widget class="EtLabel" name="studentDragLabel">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>80</y>
+        <width>281</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::WinPanel</enum>
+      </property>
+      <property name="text">
+       <string>DRAG STUDENT FILES HERE</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
     </widget>
-    <widget class="QListWidget" name="baseFileList">
+    <widget class="EtListWidget" name="baseFileList">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -69,27 +96,30 @@
        <height>191</height>
       </rect>
      </property>
-    </widget>
-    <widget class="QLabel" name="studentDragLabel">
-     <property name="geometry">
-      <rect>
-       <x>220</x>
-       <y>110</y>
-       <width>271</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>20</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>DRAG STUDENT FILES HERE</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
+     <widget class="EtLabel" name="baseDragLabel">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>80</y>
+        <width>241</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::WinPanel</enum>
+      </property>
+      <property name="text">
+       <string>DRAG BASE FILES HERE</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
     </widget>
     <widget class="QLabel" name="studentLabel">
      <property name="geometry">
@@ -125,27 +155,6 @@
      </property>
      <property name="text">
       <string>Base Files</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="baseDragLabel">
-     <property name="geometry">
-      <rect>
-       <x>220</x>
-       <y>320</y>
-       <width>271</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>20</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>DRAG BASE FILES HERE</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </widget>
@@ -287,6 +296,12 @@
      </property>
      <property name="text">
       <string>Add Student Files</string>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QPushButton" name="clearStudentButton">
@@ -741,6 +756,17 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>EtLabel</class>
+   <extends>QLabel</extends>
+   <header>etlabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EtMainWindow</class>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
