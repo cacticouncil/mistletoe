@@ -17,8 +17,8 @@ def main():
 	client.OnSuccess = onMossSuccess
 	client.Output = onMossOutput
 	client.language = "cc"
-	client.Run(["/tmp/test.cpp", "/tmp/test2.cpp"], ["/tmp/base1.cpp"])
-	raw_input("Press enter to continue...")	
+	client.RunAsync(["/tmp/test.cpp", "/tmp/test2.cpp"], ["/tmp/base1.cpp"])
+	raw_input("Press enter to continue...\n")	
 
 if __name__ == "__main__":
 	main()

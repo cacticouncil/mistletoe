@@ -1,4 +1,5 @@
 import socket
+import threading
 
 class Client:
 	def __init__(self):
@@ -12,6 +13,7 @@ class Client:
 		self.comment = ""
 		self.maxResults = 65536
 		self.isConnected = False
+		self.mossThread = None
 
 	def __del__(self):
 		if self.isConnected:
@@ -123,6 +125,15 @@ class Client:
 		"""
 		self.SendAll("end\n")
 
+	def RunAsync(self, studentFiles, baseFiles):
+		""" Asynchronously connects to the MOSS server and waits for the server to compute the results.
+		Args:
+			studentFiles: List of paths to student files to be sent to the server.
+			baseFiles: List of paths to base files to be sent to the server.
+	    """
+		self.mossThread = threading.Thread(target=self.Run, args=[studentFiles, baseFiles])
+		self.mossThread.start()
+
 	def Run(self, studentFiles, baseFiles):
 		""" Connects to the MOSS server and waits for the server to compute the results.
 		Args:
@@ -143,9 +154,9 @@ class Client:
 			self.Output("Verifying server supports language '{}'...".format(self.language))
 			if not self.MossConfirmLanguage():
 				self.OnFailure("Language {} not supported".format(self.language))
-				self.MossEnd();
+				self.MossEnd()
 				self.Shutdown()
-				return
+				return 
 
 			###########################################
 			# Upload our files
@@ -174,8 +185,8 @@ class Client:
 				self.OnFailure("Server didn't return a result")
 				return
 			else:
-				self.OnSuccess(resultUrl);
-				return
+				self.OnSuccess(resultUrl)
+				return resultUrl
 
 		except socket.timeout as ex:
 			self.OnFailure("Timed out connecting to server: {}".format(ex.strerror))
