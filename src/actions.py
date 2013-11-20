@@ -4,6 +4,8 @@ from PySide import QtGui
 import EtGui, EtTools
 
 import shared
+import webbrowser
+import moss
 
 def actionExit_trigger():
     shared.mainWindow.close()
@@ -54,8 +56,29 @@ def clearBaseButton_click():
     shared.mainWindow.findChild(EtGui.EtListWidget, "baseFileList").clear()
     shared.mainWindow.findChild(EtGui.EtLabel, "baseDragLabel").show()
 
+def moss_output(message):
+    outputMessage(message)
+
+def moss_failed(message):
+    outputMessage(message)
+
+def moss_success(message):
+    outputMessage("Result: <a href={}>{}</a>".format(message, message))
+    outputMessage("Opening result in browser...")
+    webbrowser.open(message, new=2)
+
 def runQueryButton_click():
-    None
+    languageBox =shared.mainWindow.findChild(QtGui.QComboBox, "languageBox")
+    language = languageBox.currentText()
+    baseFiles = getFilesFromList("baseFileList")
+    studentFiles = getFilesFromList("studentFileList")
+
+    client = moss.Client()
+    client.OnFailure = moss_failed
+    client.OnSuccess = moss_success
+    client.Output = moss_output
+    client.language = language
+    client.RunAsync(studentFiles, baseFiles)
 
 def saveQueryButton_click():
     None
@@ -89,13 +112,27 @@ def addFilesToList(listName, files):
     fileList = shared.mainWindow.findChild(EtGui.EtListWidget, listName)
     addFilter = shared.mainWindow.findChild(QtGui.QLineEdit, "filterEdit").text()
     ignoreFilter = shared.mainWindow.findChild(QtGui.QLineEdit, "ignoreEdit").text()
+    filesAlreadyInList = getFilesFromList(listName)
     sourceFiles = []
 
     for filename in files:
         sourceFiles.extend(EtTools.getFiles(filename, addFilter, ignoreFilter))
 
-    fileList.addItems(sourceFiles)
+    for filename in sourceFiles:
+        if filename not in filesAlreadyInList:
+            fileList.addItem(filename)
     
     if fileList.count() != 0:
         fileList.findChild(EtGui.EtLabel).hide()
             
+def outputMessage(message):
+    textBrowserOutput = shared.mainWindow.findChild(QtGui.QTextBrowser)
+    textBrowserOutput.append(message)
+
+def getFilesFromList(listName):
+    fileList = shared.mainWindow.findChild(EtGui.EtListWidget, listName)
+    files = []
+    for i in range(fileList.count()):
+        files.append(fileList.item(i).text())
+
+    return files

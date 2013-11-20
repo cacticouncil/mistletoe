@@ -37,7 +37,15 @@
   <property name="windowTitle">
    <string>Mistletoe</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
+  <widget class="QWidget" name="centralwidget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1000</width>
+     <height>670</height>
+    </rect>
+   </property>
    <widget class="QGroupBox" name="codeBox">
     <property name="geometry">
      <rect>
@@ -50,7 +58,7 @@
     <property name="title">
      <string>Code</string>
     </property>
-    <widget class="EtListWidget" name="studentFileList">
+    <widget class="EtListWidget" name="studentFileList" native="true">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -87,7 +95,7 @@
       </property>
      </widget>
     </widget>
-    <widget class="EtListWidget" name="baseFileList">
+    <widget class="EtListWidget" name="baseFileList" native="true">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -387,9 +395,27 @@
        <height>21</height>
       </rect>
      </property>
-     <property name="currentIndex">
-      <number>1</number>
+     <property name="currentText">
+      <string>cc</string>
      </property>
+     <property name="currentIndex">
+      <number>5</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>a8086</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>ada</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>ascii</string>
+      </property>
+     </item>
      <item>
       <property name="text">
        <string>c</string>
@@ -397,12 +423,22 @@
      </item>
      <item>
       <property name="text">
-       <string>cpp</string>
+       <string>csharp</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>cs</string>
+       <string>cc</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>fortran</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>haskell</string>
       </property>
      </item>
      <item>
@@ -412,7 +448,7 @@
      </item>
      <item>
       <property name="text">
-       <string>js</string>
+       <string>javascript</string>
       </property>
      </item>
      <item>
@@ -422,22 +458,67 @@
      </item>
      <item>
       <property name="text">
-       <string>pl</string>
+       <string>matlab</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>py</string>
+       <string>mips</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>s</string>
+       <string>ml</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>modula2</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>pascal</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>perl</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>plsql</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>prolog</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>python</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>scheme</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>spice</string>
       </property>
      </item>
      <item>
       <property name="text">
        <string>vb</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>vhdl</string>
       </property>
      </item>
     </widget>
@@ -627,101 +708,18 @@
      <string>Output</string>
     </property>
    </widget>
-   <widget class="QScrollArea" name="outputArea">
+   <widget class="QTextBrowser" name="textBrowser">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>470</y>
       <width>981</width>
-      <height>201</height>
+      <height>191</height>
      </rect>
     </property>
-    <property name="palette">
-     <palette>
-      <active>
-       <colorrole role="Base">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>255</red>
-          <green>255</green>
-          <blue>255</blue>
-         </color>
-        </brush>
-       </colorrole>
-       <colorrole role="Window">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>255</red>
-          <green>255</green>
-          <blue>255</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </active>
-      <inactive>
-       <colorrole role="Base">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>255</red>
-          <green>255</green>
-          <blue>255</blue>
-         </color>
-        </brush>
-       </colorrole>
-       <colorrole role="Window">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>255</red>
-          <green>255</green>
-          <blue>255</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </inactive>
-      <disabled>
-       <colorrole role="Base">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>255</red>
-          <green>255</green>
-          <blue>255</blue>
-         </color>
-        </brush>
-       </colorrole>
-       <colorrole role="Window">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>255</red>
-          <green>255</green>
-          <blue>255</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </disabled>
-     </palette>
-    </property>
-    <property name="font">
-     <font>
-      <family>Lucida Grande</family>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="widgetResizable">
+    <property name="openExternalLinks">
      <bool>true</bool>
     </property>
-    <widget class="QWidget" name="scrollAreaWidgetContents">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>979</width>
-       <height>199</height>
-      </rect>
-     </property>
-    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -765,6 +763,11 @@
   <customwidget>
    <class>EtMainWindow</class>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>EtListWidget</class>
+   <extends>QWidget</extends>
+   <header>etlistwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
