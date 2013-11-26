@@ -1,11 +1,12 @@
 import os
 
+from PySide import QtCore
 from PySide import QtGui
 import EtGui, EtTools
 
 import shared
 import webbrowser
-import moss
+from mossfrontend import *
 
 def actionExit_trigger():
     shared.mainWindow.close()
@@ -68,17 +69,7 @@ def moss_success(message):
     webbrowser.open(message, new=2)
 
 def runQueryButton_click():
-    languageBox =shared.mainWindow.findChild(QtGui.QComboBox, "languageBox")
-    language = languageBox.currentText()
-    baseFiles = getFilesFromList("baseFileList")
-    studentFiles = getFilesFromList("studentFileList")
-
-    client = moss.Client()
-    client.OnFailure = moss_failed
-    client.OnSuccess = moss_success
-    client.Output = moss_output
-    client.language = language
-    client.RunAsync(studentFiles, baseFiles)
+    runMossAsync()
 
 def saveQueryButton_click():
     None
@@ -90,7 +81,12 @@ def saveOutputButton_click():
     None
 
 def clearOutputButton_click():
-    None
+    # TODO: Was having some trouble clearing the QTextBrowser contents after inserting
+    #   html links (<a href=...>...</a>). The link would persist through the next few
+    #   calls to append
+    outputControl = shared.mainWindow.findChild(QtGui.QTextBrowser)
+    outputControl.clear()
+    outputControl.setHtml("")
 
 def mainWindow_close(source, event):
     config = shared.config
@@ -126,8 +122,7 @@ def addFilesToList(listName, files):
         fileList.findChild(EtGui.EtLabel).hide()
             
 def outputMessage(message):
-    textBrowserOutput = shared.mainWindow.findChild(QtGui.QTextBrowser)
-    textBrowserOutput.append(message)
+    shared.mainWindow.findChild(QtGui.QTextBrowser).append(message)
 
 def getFilesFromList(listName):
     fileList = shared.mainWindow.findChild(EtGui.EtListWidget, listName)

@@ -1,5 +1,5 @@
 import socket
-import threading
+import string
 
 class Client:
     def __init__(self):
@@ -13,7 +13,6 @@ class Client:
         self.comment = ""
         self.maxResults = 65536
         self.isConnected = False
-        self.mossThread = None
 
     def __del__(self):
         if self.isConnected:
@@ -86,7 +85,8 @@ class Client:
         fileContents = fileHandle.read()
         fileHandle.close()
         fileSize = len(fileContents)
-        self.SendAll("file {} {} {} {}\n".format(fileIndex, self.language, fileSize, filePath))
+
+        self.SendAll("file {} {} {} {}\n".format(fileIndex, self.language, fileSize, string.replace(filePath, " ", "_")))
         self.SendAll(fileContents)
         
     def MossSendHeader(self):
@@ -109,6 +109,7 @@ class Client:
         """
         self.SendAll("language {}\n".format(self.language))
         languageExists = self.RecvLine()
+        print 'Result: ' + languageExists
         return languageExists == "yes"
 
     def MossSubmit(self):
@@ -124,10 +125,6 @@ class Client:
             Exception: Failed to send 'end' request to server.
         """
         self.SendAll("end\n")
-
-    def RunAsync(self, studentFiles, baseFiles):
-        self.mossThread = threading.Thread(target=self.Run, args=[studentFiles, baseFiles])
-        self.mossThread.start()
 
     def Run(self, studentFiles, baseFiles):
         """ Connects to the MOSS server and waits for the server to compute the results.
@@ -150,12 +147,12 @@ class Client:
             # Initialize MOSS session
             ###########################################
             self.MossSendHeader()
-            self.Output("Verifying server supports language '{}'...".format(self.language))
-            if not self.MossConfirmLanguage():
-                self.OnFailure("Language {} not supported".format(self.language))
-                self.MossEnd()
-                self.Shutdown()
-                return 
+            #self.Output("Verifying server supports language '{}'...".format(self.language))
+            #if not self.MossConfirmLanguage():
+            #    self.OnFailure("Language {} not supported".format(self.language))
+            #    self.MossEnd()
+            #    self.Shutdown()
+            #    return 
 
             ###########################################
             # Upload our files
