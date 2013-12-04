@@ -6,7 +6,7 @@ global configPath, tempPath, addPath
 global config, mainWindow
 
 # Fixed data filenames
-mainUiFile = "Mistletoe.ui"
+mainUiFile = "mistletoe.ui"
 configFile = "Mistletoe.ini"
 
 # Grab system-dependent path variables

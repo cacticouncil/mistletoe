@@ -90,6 +90,7 @@ def clearOutputButton_click():
 
 def mainWindow_close(source, event):
     config = shared.config
+    EtTools.tempFileManager.cleanup()
 
     fileHandle = open(shared.configPath + shared.configFile, 'w')
     config.set("config","AddFilter", source.findChild(QtGui.QLineEdit, "filterEdit").text())

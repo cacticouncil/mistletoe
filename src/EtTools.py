@@ -1,4 +1,6 @@
-import platform, os, tempfile, fnmatch
+import platform, os, tempfile, fnmatch, fileManagement
+
+tempFileManager = fileManagement.FileManager()
 
 def getTempPath():
     return os.path.join(tempfile.gettempdir(), "")
@@ -16,14 +18,24 @@ def getAppDataPath():
     else:
         return getHomePath()
 
+def isIgnoredFile(filename, filterList, ignoreList):
+    if not ignoreList == None:
+        for pattern in ignoreList:
+            if fnmatch.fnmatch(filename, pattern):
+                return True
+    if not filterList == None:
+        for pattern in filterList:
+            if fnmatch.fnmatch(filename, pattern):
+                return False
+    return True
+
 def getFiles(filePath, filter = None, ignored = None):
     files = []
     if os.path.isfile(filePath):
-        if not fnmatch.fnmatch(filePath, "*" + ignored + "*"):
-            isMatching = False
-            for pattern in filter.split():
-                isMatching = isMatching or fnmatch.fnmatch(filePath, pattern)
-            if isMatching:
+        if not isIgnoredFile(filePath, filter.split(), ignored.split()):
+            if os.path.splitext(filePath)[1].lower() == ".zip":
+                tempFileManager.extractFiles(filePath, files, filter.split(), ignored.split())
+            else:
                 files.append(filePath)
     elif os.path.isdir(filePath):
         for filename in os.listdir(filePath):
