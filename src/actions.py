@@ -18,7 +18,7 @@ def fileList_drop(source, event):
         for url in event.mimeData().urls():
             if url.isLocalFile(): # or is relative
                 files.append(url.toLocalFile())
-        addFilesToList(source.objectName(), files)
+        addFilesToList(source, files, shared.tempFileLists[source])
 
         if source.count() != 0:
             source.findChild(EtGui.EtLabel).hide()
@@ -85,16 +85,16 @@ def mainWindow_close(source, event):
     fileHandle.close()
     event.accept()
 
-def addFilesToList(listName, files):
-    fileList = shared.mainWindow.findChild(EtGui.EtListWidget, listName)
+def addFilesToList(fileList, files, tempFileList):
     addFilter = shared.mainWindow.findChild(QtGui.QLineEdit, "filterEdit").text()
     ignoreFilter = shared.mainWindow.findChild(QtGui.QLineEdit, "ignoreEdit").text()
     sourceFiles = []
 
     for filename in files:
         sourceFiles.extend(EtTools.getFiles(filename, addFilter, ignoreFilter))
-
+    
     fileList.addItems(sourceFiles)
+    
     
     if fileList.count() != 0:
         fileList.findChild(EtGui.EtLabel).hide()
