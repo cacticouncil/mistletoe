@@ -60,13 +60,11 @@ def main():
     studentFileList.dragEnterEvent = studentFileList.dragMoveEvent = types.MethodType(fileList_drag, studentFileList)
     studentFileList.dropEvent = types.MethodType(fileList_drop, studentFileList)
     studentFileList.setAcceptDrops(True)
-    shared.tempFileLists[studentFileList] = []
 
     baseFileList = mainWindow.findChild(EtGui.EtListWidget, "baseFileList")
     baseFileList.dragEnterEvent = baseFileList.dragMoveEvent = types.MethodType(fileList_drag, baseFileList)
     baseFileList.dropEvent = types.MethodType(fileList_drop, baseFileList)
     baseFileList.setAcceptDrops(True)
-    shared.tempFileLists[baseFileList] = []
 
     mainWindow.findChild(QtGui.QPushButton, "addStudentButton").clicked.connect(addStudentButton_click)
     mainWindow.findChild(QtGui.QPushButton, "clearStudentButton").clicked.connect(clearStudentButton_click)
