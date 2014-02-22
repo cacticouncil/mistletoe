@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import sys, types
+import sys, types, os
 
 from PySide import QtGui
 import EtGui
@@ -10,10 +10,11 @@ import shared
 # Main routine (when called as main script)
 def main():
     config = shared.config
+    datadir = os.path.dirname(sys.executable)
 
     # Create the app wrapper and main window
     app = QtGui.QApplication(sys.argv)
-    shared.mainWindow = EtGui.EtUiLoader().loadWidgetFile(shared.mainUiFile)
+    shared.mainWindow = EtGui.EtUiLoader().loadWidgetFile(os.path.join(datadir, shared.mainUiFile))
     shared.mainWindow.closeEvent = types.MethodType(mainWindow_close, shared.mainWindow)
     mainWindow = shared.mainWindow
 
