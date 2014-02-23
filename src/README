@@ -1,0 +1,11 @@
+General build requirements:
+Qt
+Python 2.7.x
+cx_Freeze (Python module)
+PySide (Python module)
+
+Windows installer:
+NSIS Installer
+bdist_nsi (Python module)
+
+Project is in Eclipse format.
