@@ -10,7 +10,11 @@ import shared
 # Main routine (when called as main script)
 def main():
     config = shared.config
-    datadir = os.path.dirname(sys.executable)
+
+    if getattr(sys, 'frozen', False):
+        datadir = os.path.dirname(sys.executable)
+    else:
+        datadir = os.path.dirname(__file__)
 
     # Create the app wrapper and main window
     app = QtGui.QApplication(sys.argv)
