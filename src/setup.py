@@ -2,8 +2,8 @@
 Usage:
     Test Build:
         python setup.py build
-    MacOS X Distribution:
-        python setup.py bdist_dmg
+    Distribution:
+        python setup.py dist
     Windows Distribution (not yet working):
         python setup.py (Eventually will use bdist_nsi)
 """
@@ -26,10 +26,18 @@ ez_setup.use_setuptools()
 import sys
 from cx_Freeze import setup, Executable
 
-# Deal with Windows-specific requirements
+# Deal with platform-specific requirements
 if sys.platform == 'win32':
-    import bdist_nsi
-    BASE = 'Win32GUI'
+    if sys.argv[1] == 'dist':
+        sys.argv[1] = 'bdist_nsi'
+        import bdist_nsi
+    BASE = 'Win32GUI'    
+
+elif sys.platform == 'darwin':
+    if sys.argv[1] == 'dist':
+        sys.argv[1] = 'bdist_dmg'
+    BASE = None
+
 else:
     BASE = None
 

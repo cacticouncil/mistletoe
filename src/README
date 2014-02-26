@@ -1,8 +1,9 @@
 General build requirements:
-Qt
 Python 2.7.x
+setuptools (Python module)
 cx_Freeze (Python module)
 PySide (Python module)
+PyWin32 (Python module - Windows only)
 
 Windows installer:
 NSIS Installer
