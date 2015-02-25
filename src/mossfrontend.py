@@ -55,6 +55,7 @@ def runMossAsync():
     if shared.mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").isChecked():
         isComparingDirectories = 1
     
+	workerThread.isComparingDirectories = isComparingDirectories;
     workerThread.studentFiles = actions.getFilesFromList("studentFileList")
     workerThread.baseFiles = actions.getFilesFromList("baseFileList")
     workerThread.maxMatchesPerPassage = shared.mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value()
