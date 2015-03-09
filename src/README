@@ -5,8 +5,20 @@ cx_Freeze (Python module)
 PySide (Python module)
 PyWin32 (Python module - Windows only)
 
+To build a directory with an executable and other files inside it:
+	python setup.py build
+	Directory is named "build\exe.win32-2.7\"
+	Copy/zip directory to share
+	
+For a Windows .msi:
+	python setup.py bdist_msi
+	It's in "dist\"
+
+On Mac OS X, for a Mac disk image: <= UNTESTED
+	python setup.py bdist_dmg
+
 Windows installer:
-NSIS Installer
+NSIS Installer (http://nsis.sourceforge.net/Main_Page)
 bdist_nsi (Python module)
 
 Project is in Eclipse format.
