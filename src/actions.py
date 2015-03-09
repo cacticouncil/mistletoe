@@ -113,7 +113,7 @@ def addFilesToList(listName, files):
     sourceFiles = []
 
     for filename in files:
-        sourceFiles.extend(EtTools.getFiles(filename, addFilter, ignoreFilter))
+        sourceFiles.extend(EtTools.getFiles(filename, addFilter, ignoreFilter, outputMessage))
 
     for filename in sourceFiles:
         if filename not in filesAlreadyInList:

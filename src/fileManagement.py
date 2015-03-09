@@ -19,7 +19,7 @@ class FileManager:
             shutil.rmtree(self.tempDirectory, True)
             self.tempDirectory = None
 
-    def extractFiles(self, archivePath, extractedFiles, filterList = None, ignoreList = None, isExtractingToCurrentDirectory = False):
+    def extractFiles(self, archivePath, extractedFiles, filterList = None, ignoreList = None, isExtractingToCurrentDirectory = False, outputMessage = None):
         """ Extracts the filtered contents of the specified zip archive to the temporary directory. 
         Args:
             archivePath: Path to the zip archive being extracted.
@@ -28,7 +28,7 @@ class FileManager:
             ignoreList: List of file patterns to exclude. Applied to all files. Takes priority over filterList.
             isExtractingToCurrentDirectory: Determines if the contents of the archive will be extracted to the current directory.
         Raises:
-            Exception: Error occurred when extracting contents of zip archive.
+            Exception: Error occurred when extracting contents of zip archive to unexpected location.
         """
         archiveNameWithoutExtension = os.path.splitext(os.path.split(archivePath)[1])[0]
         archivePathWithoutName = os.path.split(archivePath)[0]
@@ -38,21 +38,24 @@ class FileManager:
         else:
             directoryToExtractTo = os.path.realpath(os.path.join(self.tempDirectory, archiveNameWithoutExtension))
             
-        with zipfile.ZipFile(archivePath, 'r') as zip:
-            for name in zip.namelist():
-                if EtTools.isIgnoredFile(name, filterList, ignoreList):
-                    continue
+        try:
+            with zipfile.ZipFile(archivePath, 'r') as zip:
+                for name in zip.namelist():
+                    if EtTools.isIgnoredFile(name, filterList, ignoreList):
+                        continue
 
-                pathToExtractedFile = os.path.realpath(os.path.join(directoryToExtractTo, name))
-                if not pathToExtractedFile.startswith(directoryToExtractTo):
-                    # Files inside of zip archives can be maliciously named to cause writing to unexpected locations. All versions
-                    # of python prior to 2.7.4 are vulnerable to this sort of attack. Therefore, we must manually guarantee
-                    # that all writes are to our temporary directory.
-                    raise Exception("Security warning: Blocked directory traversal when extracting: '{}'".format(name))
+                    pathToExtractedFile = os.path.realpath(os.path.join(directoryToExtractTo, name))
+                    if not pathToExtractedFile.startswith(directoryToExtractTo):
+                        # Files inside of zip archives can be maliciously named to cause writing to unexpected locations. All versions
+                        # of python prior to 2.7.4 are vulnerable to this sort of attack. Therefore, we must manually guarantee
+                        # that all writes are to our temporary directory.
+                        raise Exception("Security warning: Blocked directory traversal when extracting: '{}'".format(name))
 
-                zip.extract(name, directoryToExtractTo)
+                    zip.extract(name, directoryToExtractTo)
                 
-                if os.path.splitext(pathToExtractedFile)[1].lower() == ".zip":
-                    self.extractFiles(pathToExtractedFile, extractedFiles, filterList, ignoreList, True)
-                else:
-                    extractedFiles.append(pathToExtractedFile)
+                    if os.path.splitext(pathToExtractedFile)[1].lower() == ".zip":
+                        self.extractFiles(pathToExtractedFile, extractedFiles, filterList, ignoreList, True, outputMessage)
+                    else:
+                        extractedFiles.append(pathToExtractedFile)
+        except zipfile.BadZipfile:
+            outputMessage("BadZipfile: " + archivePath)

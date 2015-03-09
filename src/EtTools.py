@@ -29,17 +29,17 @@ def isIgnoredFile(filename, filterList, ignoreList):
                 return False
     return True
 
-def getFiles(filePath, filter = None, ignored = None):
+def getFiles(filePath, filter = None, ignored = None, outputMessage = None):
     files = []
     if os.path.isfile(filePath):
         if not isIgnoredFile(filePath, filter.split(), ignored.split()):
             if os.path.splitext(filePath)[1].lower() == ".zip":
-                tempFileManager.extractFiles(filePath, files, filter.split(), ignored.split())
+                tempFileManager.extractFiles(filePath, files, filter.split(), ignored.split(), outputMessage = outputMessage)
             else:
                 files.append(filePath)
     elif os.path.isdir(filePath):
         for filename in os.listdir(filePath):
             filename = os.path.join(filePath, filename)
-            files.extend(getFiles(filename, filter, ignored))
+            files.extend(getFiles(filename, filter, ignored, outputMessage))
 
     return files
