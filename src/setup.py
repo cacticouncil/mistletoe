@@ -11,7 +11,7 @@ Usage:
 # Application setup variables
 NAME = 'Mistletoe'
 VERSION = '0.81'
-DESCRIPTION = 'GUI for MOSS'
+DESCRIPTION = 'Mistletoe is a GUI for MOSS (Measure Of Software Similarity) system.'
 
 ENTRYPOINT = 'mistletoe.py'
 DATA_FILES = [ 'mistletoe.ui' ]
