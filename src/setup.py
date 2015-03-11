@@ -10,7 +10,7 @@ Usage:
 
 # Application setup variables
 NAME = 'Mistletoe'
-VERSION = '0.8'
+VERSION = '0.81'
 DESCRIPTION = 'GUI for MOSS'
 
 ENTRYPOINT = 'mistletoe.py'
