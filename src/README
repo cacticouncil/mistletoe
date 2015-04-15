@@ -1,9 +1,6 @@
 General build requirements:
-Python 2.7.x
-setuptools (Python module)
-cx_Freeze (Python module)
-PySide (Python module)
-PyWin32 (Python module - Windows only)
+	Python 2.7.x
+	pip install: setuptools, cx_Freeze, PySide, PyWin32 (Windows only)
 
 To build a directory with an executable and other files inside it:
 	python setup.py build
@@ -18,7 +15,9 @@ On Mac OS X, for a Mac disk image: <= UNTESTED
 	python setup.py bdist_dmg
 
 Windows installer:
-NSIS Installer (http://nsis.sourceforge.net/Main_Page)
-bdist_nsi (Python module)
+	NSIS Installer (http://nsis.sourceforge.net/Main_Page)
+	pip install: bdist_nsi <= UNNECESSARY?
 
-Project is in Eclipse format.
+	Right-click and Compile the "Mistletoe.nsi" within "NSIS".
+
+Projects are in Visual Studio and Eclipse formats.
