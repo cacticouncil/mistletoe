@@ -2,11 +2,15 @@ import os
 
 from PySide import QtCore
 from PySide import QtGui
-import EtGui, EtTools
+import EtGui, EtFile
 
 import shared
 import webbrowser
 from mossfrontend import *
+
+import fileManagement
+
+tempFileManager = fileManagement.FileManager()
 
 def actionExit_trigger():
     shared.mainWindow.close()
@@ -90,7 +94,7 @@ def clearOutputButton_click():
 
 def mainWindow_close(source, event):
     config = shared.config
-    EtTools.tempFileManager.cleanup()
+    tempFileManager.cleanup()
 
     fileHandle = open(shared.configPath + shared.configFile, 'w')
     config.set("config","AddFilter", source.findChild(QtGui.QLineEdit, "filterEdit").text())
@@ -113,7 +117,7 @@ def addFilesToList(listName, files):
     sourceFiles = []
 
     for filename in files:
-        sourceFiles.extend(EtTools.getFiles(filename, addFilter, ignoreFilter, outputMessage))
+        sourceFiles.extend(getFilesFromPath)
 
     for filename in sourceFiles:
         if filename not in filesAlreadyInList:
@@ -132,3 +136,22 @@ def getFilesFromList(listName):
         files.append(fileList.item(i).text())
 
     return files
+
+def getFilesFromPath(filename, addFilter, ignoreFilter, outputMessage):
+    return getFiles(filename, addFilter, ignoreFilter, outputMessage)
+
+def getFiles(filePath, fileFilter = "", ignored = ""):
+    files = []
+    if os.path.isfile(filePath):
+        if not EtFile.isIgnoredFile(filePath, fileFilter.split(), ignored.split()):
+            if os.path.splitext(filePath)[1].lower() == ".zip":
+                tempFileManager.extractFiles(filePath, files, fileFilter.split(), ignored.split())
+            else:
+                files.append(filePath)
+    elif os.path.isdir(filePath):
+        for filename in os.listdir(filePath):
+            filename = os.path.join(filePath, filename)
+            files.extend(getFiles(filename, fileFilter, ignored))
+
+    return files
+
