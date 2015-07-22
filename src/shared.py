@@ -1,4 +1,4 @@
-from EtTools import *
+from EtFile import *
 import ConfigParser
 
 global mainUiFile, configFile
