@@ -1,4 +1,4 @@
-import os
+﻿import os
 
 from PySide import QtCore
 from PySide import QtGui
@@ -117,7 +117,7 @@ def addFilesToList(listName, files):
     sourceFiles = []
 
     for filename in files:
-        sourceFiles.extend(getFilesFromPath)
+        sourceFiles.extend(getFiles(filename))
 
     for filename in sourceFiles:
         if filename not in filesAlreadyInList:

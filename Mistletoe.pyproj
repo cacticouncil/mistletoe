@@ -6,13 +6,14 @@
     <ProjectGuid>{300cf1d2-5d90-4e43-b3e3-547bfed69595}</ProjectGuid>
     <ProjectHome>src\</ProjectHome>
     <StartupFile>mistletoe.py</StartupFile>
-    <SearchPath />
+    <SearchPath>C:\work\EdTechLib\src</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <InterpreterId>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</InterpreterId>
     <InterpreterVersion>2.7</InterpreterVersion>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
@@ -25,8 +26,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="actions.py" />
-    <Compile Include="EtGui.py" />
-    <Compile Include="EtTools.py" />
     <Compile Include="ez_setup.py" />
     <Compile Include="fileManagement.py" />
     <Compile Include="mistletoe.py" />
