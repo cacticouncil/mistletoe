@@ -24,7 +24,10 @@ import ez_setup
 ez_setup.use_setuptools()
 
 import sys
+import os
 from cx_Freeze import setup, Executable
+
+sys.path.append(os.path.abspath('/Work/EdTechLib/Src'))
 
 # Deal with platform-specific requirements
 if sys.platform == 'win32':
