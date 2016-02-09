@@ -4,7 +4,7 @@ import shutil
 import zipfile
 import sys
 import fnmatch
-import EtTools
+import EtFile
 
 class FileManager:
     """ Manages all things related to extracting zip archives to a temporary directory. """
@@ -41,7 +41,7 @@ class FileManager:
         try:
             with zipfile.ZipFile(archivePath, 'r') as zip:
                 for name in zip.namelist():
-                    if EtTools.isIgnoredFile(name, filterList, ignoreList):
+                    if EtFile.isIgnoredFile(name, filterList, ignoreList):
                         continue
 
                     pathToExtractedFile = os.path.realpath(os.path.join(directoryToExtractTo, name))
