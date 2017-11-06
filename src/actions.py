@@ -16,7 +16,7 @@ def actionExit_trigger():
     shared.mainWindow.close()
 
 def actionSettings_trigger():
-    print "settings"
+    print("settings")
 
 def fileList_drop(source, event):
     if event.mimeData().hasUrls():
@@ -63,6 +63,9 @@ def clearBaseButton_click():
 
 def moss_output(message):
     outputMessage(message)
+
+def moss_warning(message):
+    outputMessage('<span style="color: red;">{}</span>'.format(message))
 
 def moss_failed(message):
     outputMessage(message)
@@ -117,15 +120,15 @@ def addFilesToList(listName, files):
     sourceFiles = []
 
     for filename in files:
-        sourceFiles.extend(getFiles(filename))
+        sourceFiles.extend(getFiles(filename, addFilter, ignoreFilter))
 
     for filename in sourceFiles:
         if filename not in filesAlreadyInList:
             fileList.addItem(filename)
-    
+
     if fileList.count() != 0:
         fileList.findChild(EtGui.EtLabel).hide()
-            
+
 def outputMessage(message):
     shared.mainWindow.findChild(QtGui.QTextBrowser).append(message)
 
@@ -142,16 +145,17 @@ def getFilesFromPath(filename, addFilter, ignoreFilter, outputMessage):
 
 def getFiles(filePath, fileFilter = "", ignored = ""):
     files = []
-    if os.path.isfile(filePath):
-        if not EtFile.isIgnoredFile(filePath, fileFilter.split(), ignored.split()):
+
+    if not EtFile.isIgnoredFile(filePath, fileFilter.split(), ignored.split()):
+        if os.path.isfile(filePath):
             if os.path.splitext(filePath)[1].lower() == ".zip":
                 tempFileManager.extractFiles(filePath, files, fileFilter.split(), ignored.split())
             else:
                 files.append(filePath)
-    elif os.path.isdir(filePath):
-        for filename in os.listdir(filePath):
-            filename = os.path.join(filePath, filename)
-            files.extend(getFiles(filename, fileFilter, ignored))
+        elif os.path.isdir(filePath):
+            for filename in os.listdir(filePath):
+                filename = os.path.join(filePath, filename)
+                files.extend(getFiles(filename, fileFilter, ignored))
 
     return files
 

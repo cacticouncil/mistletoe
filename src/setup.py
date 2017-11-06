@@ -45,8 +45,8 @@ else:
     BASE = None
 
 # Prepare setup options
-EXECUTABLES = [ Executable(ENTRYPOINT, base=BASE) ]
-FREEZE_OPTIONS = {'includes': MODULES, 'include_files': DATA_FILES, 'icon': WIN_ICON, 'include_msvcr': True }
+EXECUTABLES = [ Executable(ENTRYPOINT, base=BASE, icon=WIN_ICON) ]
+FREEZE_OPTIONS = {'includes': MODULES, 'include_files': DATA_FILES, 'include_msvcr': True }
 
 NSIS_OPTIONS = {}
 BUNDLE_OPTIONS = {'iconfile': MAC_ICON, 'bundle_name': NAME }

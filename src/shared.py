@@ -1,5 +1,5 @@
 from EtFile import *
-import ConfigParser
+import configparser
 
 global mainUiFile, configFile
 global configPath, tempPath, addPath
@@ -15,5 +15,5 @@ addPath = getHomePath()
 configPath = getAppDataPath()
 
 # Allocate a configuration object and main window reference
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 mainWindow = None

@@ -28,21 +28,23 @@ class Client:
         Raises:
             Exception: Error occurred when receiving data.
         """
-        messageFromServer = ""
+        messageFromServer = b""
+
         while True:
             recvBuff = self.sock.recv(1)
-            if len(recvBuff) == 0 or recvBuff[0] == '\n':
+            if len(recvBuff) == 0 or recvBuff.decode('utf-8') == '\n':
                 break
             messageFromServer += recvBuff
 
-        return messageFromServer
-    
+        return messageFromServer.decode("utf-8")
+
     def SendAll(self, contents):
         """ Sends contents to the server
         Raises:
             Exception: Error occurred when sending data.
         """
-        self.sock.sendall(contents)
+        self.sock.sendall(bytes(contents, 'UTF-8', errors='replace'))
+        
 
     def Shutdown(self):
         """ Closes our connection to the server """
@@ -51,8 +53,15 @@ class Client:
         self.isConnected = False
         self.sock.shutdown(socket.SHUT_RDWR)
         self.sock.close()
-    
+
     def Output(self, message):
+        """ Processes any output messages. Meant to be overridden by library user.
+        Args:
+            message: Output message
+        """
+        None
+
+    def OnWarning(self, message):
         """ Processes any output messages. Meant to be overridden by library user.
         Args:
             message: Output message
@@ -81,14 +90,23 @@ class Client:
         Raises:
             Exception: Failed to read file and send contents to server.
         """
-        fileHandle = open(filePath, 'r')
-        fileContents = fileHandle.read()
-        fileHandle.close()
-        fileSize = len(fileContents)
+        fileContents = None
 
-        self.SendAll("file {} {} {} {}\n".format(fileIndex, self.language, fileSize, string.replace(filePath, " ", "_")))
+        try:
+            fileHandle = open(filePath, 'r', encoding="utf-8")
+            fileContents = fileHandle.read()
+            fileHandle.close()
+        except Exception as ex:
+            raise RuntimeWarning('Error loading file ' + filePath)
+
+        if fileContents == None:
+            fileSize = 0
+        else:
+            fileSize = len(fileContents)
+
+        self.SendAll("file {} {} {} {}\n".format(fileIndex, self.language, fileSize, filePath.replace(" ", "_")))
         self.SendAll(fileContents)
-        
+
     def MossSendHeader(self):
         """ Sends all required headers to MOSS server. MossConfirmLanguage
         Raises:
@@ -109,7 +127,7 @@ class Client:
         """
         self.SendAll("language {}\n".format(self.language))
         languageExists = self.RecvLine()
-        print 'Result: ' + languageExists
+        print('Result:', languageExists)
         return languageExists == "yes"
 
     def MossSubmit(self):
@@ -132,6 +150,7 @@ class Client:
             studentFiles: List of paths to student files to be sent to the server.
             baseFiles: List of paths to base files to be sent to the server.
         """
+        exceptioninfo = None
         if len(studentFiles) == 0:
             self.OnFailure("Missing student files.")
             return
@@ -152,20 +171,28 @@ class Client:
             #    self.OnFailure("Language {} not supported".format(self.language))
             #    self.MossEnd()
             #    self.Shutdown()
-            #    return 
+            #    return
 
             ###########################################
             # Upload our files
             ###########################################
             numBaseFiles = len(baseFiles)
+            self.Output("Uploading base files...")
             for i in range (0, numBaseFiles):
                 self.Output("Uploading '{}'".format(baseFiles[i]))
-                self.MossUploadFile(baseFiles[i], 0)
+                try:
+                    self.MossUploadFile(baseFiles[i], 0)
+                except Warning as warning:
+                    self.OnWarning("WARNING: {}".format(str(warning)))
 
             numStudentFiles = len(studentFiles)
+            self.Output("Uploading student files...")
             for i in range (0, numStudentFiles):
                 self.Output("Uploading '{}'".format(studentFiles[i]))
-                self.MossUploadFile(studentFiles[i], i + 1)
+                try:
+                    self.MossUploadFile(studentFiles[i], i + 1)
+                except Warning as warning:
+                    self.OnWarning("WARNING: {}".format(str(warning)))
 
             ###########################################
             # Request results
@@ -185,11 +212,10 @@ class Client:
                 return resultUrl
 
         except socket.timeout as ex:
-            self.OnFailure("Timed out connecting to server: {}".format(ex.strerror))
+            self.OnFailure("Timed out connecting to server: {}".format(str(ex)))
             return
-        except socket.error as ex:
-            self.OnFailure("Failed to initialize network connection: {} {}".format(ex.errno, ex.strerror))
+        except OSError as ex:
+            self.OnFailure("OS error: {} [{}]".format(str(ex), ex.errno))
             return
         except Exception as ex:
-            self.OnFailure("Unknown exception: {}".format(ex.message))
-            return
+            self.OnFailure("Unknown exception: {}".format(str(ex)))

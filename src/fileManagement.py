@@ -51,11 +51,14 @@ class FileManager:
                         # that all writes are to our temporary directory.
                         raise Exception("Security warning: Blocked directory traversal when extracting: '{}'".format(name))
 
-                    zip.extract(name, directoryToExtractTo)
-                
+                    try:
+                        zip.extract(name, directoryToExtractTo)
+                    except Exception:
+                        print("Error extracting", name, "from", archivePath)
+
                     if os.path.splitext(pathToExtractedFile)[1].lower() == ".zip":
                         self.extractFiles(pathToExtractedFile, extractedFiles, filterList, ignoreList, True, outputMessage)
-                    else:
+                    elif not os.path.isdir(pathToExtractedFile):
                         extractedFiles.append(pathToExtractedFile)
         except zipfile.BadZipfile:
-            outputMessage("BadZipfile: " + archivePath)
+            outputMessage = "BadZipfile: " + archivePath
