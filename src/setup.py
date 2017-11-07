@@ -10,7 +10,7 @@ Usage:
 
 # Application setup variables
 NAME = 'Mistletoe'
-VERSION = '0.81'
+VERSION = '0.9'
 DESCRIPTION = 'Mistletoe is a GUI for MOSS (Measure Of Software Similarity) system.'
 
 ENTRYPOINT = 'mistletoe.py'
@@ -18,36 +18,36 @@ DATA_FILES = [ 'mistletoe.ui' ]
 MODULES = [ 'PySide.QtXml' ]
 MAC_ICON = 'mistletoe.icns'
 WIN_ICON = 'mistletoe.ico'
-
-# Make sure prereqs are available
-import ez_setup
-ez_setup.use_setuptools()
+BASE = None
 
 import sys
 import os
 from cx_Freeze import setup, Executable
 
-sys.path.append(os.path.abspath('/Work/EdTechLib/Src'))
-
 # Deal with platform-specific requirements
 if sys.platform == 'win32':
-    if sys.argv[1] == 'dist':
-        sys.argv[1] = 'bdist_nsi'
-        import bdist_nsi
-    BASE = 'Win32GUI'    
+    import setuptools
+    BASE = 'Win32GUI'
 
-elif sys.platform == 'darwin':
     if sys.argv[1] == 'dist':
-        sys.argv[1] = 'bdist_dmg'
-    BASE = None
+        sys.argv[1] = 'bdist_msi'
 
-else:
-    BASE = None
+else
+    import ez_setup
+    ez_setup.use_setuptools(no_fake=False)
+
+    if sys.platform == 'darwin':
+        if sys.argv[1] == 'dist':
+            sys.argv[1] = 'bdist_dmg'
+
+    else:
+        pass
 
 # Prepare setup options
-EXECUTABLES = [ Executable(ENTRYPOINT, base=BASE, icon=WIN_ICON) ]
+EXECUTABLES = [ Executable(ENTRYPOINT, base=BASE, icon=WIN_ICON, shortcutName="Mistletoe", shortcutDir="ProgramMenuFolder") ]
 FREEZE_OPTIONS = {'includes': MODULES, 'include_files': DATA_FILES, 'include_msvcr': True }
 
+MSI_OPTIONS = {}
 NSIS_OPTIONS = {}
 BUNDLE_OPTIONS = {'iconfile': MAC_ICON, 'bundle_name': NAME }
 DMG_OPTIONS = {'volume_label': NAME }
@@ -62,6 +62,6 @@ setup(
     options =
     {
         'build_exe': FREEZE_OPTIONS, 'bdist_nsi': NSIS_OPTIONS,
-        'bdist_mac': BUNDLE_OPTIONS, 'bdist_dmg': DMG_OPTIONS
+        'bdist_mac': BUNDLE_OPTIONS, 'bdist_dmg': DMG_OPTIONS, 'bdist_msi': MSI_OPTIONS
     }
 )
