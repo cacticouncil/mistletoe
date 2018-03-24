@@ -172,7 +172,7 @@
       <x>990</x>
       <y>0</y>
       <width>440</width>
-      <height>285</height>
+      <height>335</height>
      </rect>
     </property>
     <property name="title">
@@ -373,12 +373,62 @@
       <string>Clear Base Files</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="addSingleStudentButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>270</y>
+       <width>210</width>
+       <height>45</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+       <kerning>true</kerning>
+      </font>
+     </property>
+     <property name="text">
+      <string>Add Single Student File</string>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="addSingleBaseButton">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>270</y>
+       <width>210</width>
+       <height>45</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+       <kerning>true</kerning>
+      </font>
+     </property>
+     <property name="text">
+      <string>Add Single Base File</string>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="executionBox">
     <property name="geometry">
      <rect>
       <x>990</x>
-      <y>300</y>
+      <y>320</y>
       <width>435</width>
       <height>285</height>
      </rect>

@@ -81,6 +81,8 @@ def main():
     mainWindow.findChild(QtGui.QPushButton, "clearQueryButton").clicked.connect(loadQueryButton_click) #TO-DO: make this load query button?
     mainWindow.findChild(QtGui.QPushButton, "saveOutputButton").clicked.connect(saveOutputButton_click)
     mainWindow.findChild(QtGui.QPushButton, "clearOutputButton").clicked.connect(clearOutputButton_click)
+    mainWindow.findChild(QtGui.QPushButton, "addSingleStudentButton").clicked.connect(addSingleStudentButton_click)
+    mainWindow.findChild(QtGui.QPushButton, "addSingleBaseButton").clicked.connect(addSingleBaseButton_click)
 
     # Launch the Gui
     mainWindow.show()

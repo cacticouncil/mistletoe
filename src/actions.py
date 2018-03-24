@@ -56,6 +56,14 @@ def addSingleStudentButton_click(): #TO-DO: Create a button for this somewhere
         if shared.mainWindow.findChild(QtGui.QCheckBox, "runCheckBox").isChecked():
             runQueryButton_click()
 
+def addSingleBaseButton_click(): #TO-DO: Create a button for this somewhere
+    (filePath, filter1) = QtGui.QFileDialog.getOpenFileName(parent = None, caption = "Select Student Source Folder to Add Files From", dir = shared.addPath)
+    if not filePath == "":
+        addFileToList("baseFileList", filePath)
+
+        if shared.mainWindow.findChild(QtGui.QCheckBox, "runCheckBox").isChecked():
+            runQueryButton_click()
+
 def clearStudentButton_click():
     shared.mainWindow.findChild(EtGui.EtListWidget, "studentFileList").clear()
     shared.mainWindow.findChild(EtGui.EtLabel, "studentDragLabel").show()
