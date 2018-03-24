@@ -78,7 +78,7 @@ def main():
 
     mainWindow.findChild(QtGui.QPushButton, "runQueryButton").clicked.connect(runQueryButton_click)
     mainWindow.findChild(QtGui.QPushButton, "saveQueryButton").clicked.connect(saveQueryButton_click)
-    mainWindow.findChild(QtGui.QPushButton, "clearQueryButton").clicked.connect(clearQueryButton_click)
+    mainWindow.findChild(QtGui.QPushButton, "clearQueryButton").clicked.connect(loadQueryButton_click) #TO-DO: make this load query button?
     mainWindow.findChild(QtGui.QPushButton, "saveOutputButton").clicked.connect(saveOutputButton_click)
     mainWindow.findChild(QtGui.QPushButton, "clearOutputButton").clicked.connect(clearOutputButton_click)
 

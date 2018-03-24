@@ -1,5 +1,6 @@
 import socket
 import string
+import os
 
 class Client:
     def __init__(self):
@@ -94,6 +95,7 @@ class Client:
 
         try:
             fileHandle = open(filePath, 'r', encoding="utf-8")
+            print(os.fstat(fileHandle.fileno()).st_size) #TO-DO: Implement this as a check for file size (this gives file_size in bytes)
             fileContents = fileHandle.read()
             fileHandle.close()
         except Exception as ex:
@@ -176,6 +178,7 @@ class Client:
             ###########################################
             # Upload our files
             ###########################################
+            # TO-DO: Potentially chunk this into bits to not overload server
             numBaseFiles = len(baseFiles)
             self.Output("Uploading base files...")
             for i in range (0, numBaseFiles):

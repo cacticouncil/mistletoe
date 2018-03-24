@@ -29,6 +29,16 @@ class MossThread(QtCore.QThread):
         client.isUsingExperimentalServer = 0
         client.Run(self.studentFiles, self.baseFiles)
 
+    #TO-DO: Test and ensure this will work correctly
+    def saveQuery(self):
+        maxMatchesPerPassage = self.maxMatchesPerPassage
+        language = self.language
+        comment = self.comment
+        isComparingDirectories = self.isComparingDirectories
+        isUsingExperimentalServer = 0
+        print(type(maxMatchesPerPassage) + type(language))
+
+
     def OnOutput(self, message):
         self.emit(QtCore.SIGNAL("OnOutput(QString)"), message)
 

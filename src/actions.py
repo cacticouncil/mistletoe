@@ -4,6 +4,7 @@ from PySide import QtCore
 from PySide import QtGui
 import EtGui, EtFile
 
+import json
 import shared
 import webbrowser
 from mossfrontend import *
@@ -47,6 +48,14 @@ def addStudentButton_click():
         if shared.mainWindow.findChild(QtGui.QCheckBox, "runCheckBox").isChecked():
             runQueryButton_click()
 
+def addSingleStudentButton_click(): #TO-DO: Create a button for this somewhere
+    (filePath, filter1) = QtGui.QFileDialog.getOpenFileName(parent = None, caption = "Select Student Source Folder to Add Files From", dir = shared.addPath)
+    if not filePath == "":
+        addFileToList("studentFileList", filePath)
+
+        if shared.mainWindow.findChild(QtGui.QCheckBox, "runCheckBox").isChecked():
+            runQueryButton_click()
+
 def clearStudentButton_click():
     shared.mainWindow.findChild(EtGui.EtListWidget, "studentFileList").clear()
     shared.mainWindow.findChild(EtGui.EtLabel, "studentDragLabel").show()
@@ -78,14 +87,75 @@ def moss_success(message):
 def runQueryButton_click():
     runMossAsync()
 
-def saveQueryButton_click():
+def saveQueryButton_click(): #TO-DO: Maybe clean this up? It currently works
+    data = {}
+    #directory comparison check
+    data['isComparingDirectories'] = []
+    isComparingDirectories = 0
+    if shared.mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").isChecked():
+        isComparingDirectories = 1
+    data['isComparingDirectories'].append(isComparingDirectories)
+    #baseFileList
+    data['baseFileList'] = []
+    baseFileList = getFilesFromList("baseFileList")
+    data['baseFileList'].append(baseFileList)
+    #studentFIleList
+    data['studentFileList'] = []
+    studentFileList = getFilesFromList("studentFileList")
+    data['studentFileList'].append(studentFileList)
+    #language
+    language = shared.mainWindow.findChild(QtGui.QComboBox, "languageBox").currentText()
+    data['language'] = []
+    data['language'].append(language)
+    #maxMatches
+    data['maxMatchesPerPassage'] = []
+    maxMatchesPerPassage = shared.mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value()
+    data['maxMatchesPerPassage'].append(maxMatchesPerPassage)
+    #comment
+    data['comment'] = []
+    comment = shared.mainWindow.findChild(QtGui.QLineEdit, "commentEdit").text()
+    data['comment'].append(comment)
+    #save Data to a file for loading in later
+    (name, filter1) = QtGui.QFileDialog.getSaveFileName(parent = None, caption = "Select File to Save Query", dir = shared.addPath)
+    with open(name,'w+') as outfile:
+        json.dump(data, outfile)
+
+#TO-DO: Maybe clean this up? It works as is
+def loadQueryButton_click():
+    (filePath, filter1) = QtGui.QFileDialog.getOpenFileName(parent = None, caption = "Select Student Source Folder to Add Files From", dir = shared.addPath)
+    if not filePath == "":
+        with open(filePath) as json_file:
+            data = json.load(json_file)
+            studentFileList = data['studentFileList']
+            baseFileList = data['baseFileList']
+            shared.mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").setChecked(data['isComparingDirectories'][0] == 1)
+            for array in studentFileList:
+                for file in array:
+                    addFileToList("studentFileList", file)
+            for array in baseFileList:
+                for file in array:
+                    addFileToList("baseFileList", file)
+            languageBox = shared.mainWindow.findChild(QtGui.QComboBox, "languageBox")
+            languageBox.setCurrentIndex(languageBox.findText(data['language'][0]))
+            shared.mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").setValue(data['maxMatchesPerPassage'][0])
+            shared.mainWindow.findChild(QtGui.QLineEdit, "commentEdit").setText(data['comment'][0])
+
+
+
+
+        
+
+
+def clearQueryButton_click(): #TO-DO: Figure out what intended functionality is, implement
     None
 
-def clearQueryButton_click():
-    None
-
-def saveOutputButton_click():
-    None
+def saveOutputButton_click(): #TO-DO: fix this to get it to open a file browser to selet a location
+    browser = shared.mainWindow.findChild(QtGui.QTextBrowser)
+    (name, filter1) = QtGui.QFileDialog.getSaveFileName(parent = None, caption = "Select File to Save Output", dir = shared.addPath)
+    file = open(name,'w+')
+    text = browser.toPlainText()
+    file.write(text)
+    file.close()
 
 def clearOutputButton_click():
     # TODO: Was having some trouble clearing the QTextBrowser contents after inserting
@@ -125,6 +195,19 @@ def addFilesToList(listName, files):
     for filename in sourceFiles:
         if filename not in filesAlreadyInList:
             fileList.addItem(filename)
+
+    if fileList.count() != 0:
+        fileList.findChild(EtGui.EtLabel).hide()
+
+def addFileToList(listName, file):
+    fileList = shared.mainWindow.findChild(EtGui.EtListWidget, listName)
+    addFilter = shared.mainWindow.findChild(QtGui.QLineEdit, "filterEdit").text()
+    ignoreFilter = shared.mainWindow.findChild(QtGui.QLineEdit, "ignoreEdit").text()
+    filesAlreadyInList = getFilesFromList(listName)
+    sourceFiles = []
+
+    if file not in filesAlreadyInList:
+        fileList.addItem(file)
 
     if fileList.count() != 0:
         fileList.findChild(EtGui.EtLabel).hide()
