@@ -94,8 +94,8 @@ class Client:
         fileContents = None
 
         try:
-            fileHandle = open(filePath, 'r', encoding="utf-8")
-            print(os.fstat(fileHandle.fileno()).st_size) #TO-DO: Implement this as a check for file size (this gives file_size in bytes)
+            fileHandle = open(filePath, 'r', encoding="utf-8") 
+            size = os.fstat(fileHandle.fileno()).st_size #TO-DO: Implement this as a check for file size (this gives file_size in bytes)
             fileContents = fileHandle.read()
             fileHandle.close()
         except Exception as ex:
@@ -108,6 +108,7 @@ class Client:
 
         self.SendAll("file {} {} {} {}\n".format(fileIndex, self.language, fileSize, filePath.replace(" ", "_")))
         self.SendAll(fileContents)
+        return size
 
     def MossSendHeader(self):
         """ Sends all required headers to MOSS server. MossConfirmLanguage
@@ -180,22 +181,27 @@ class Client:
             ###########################################
             # TO-DO: Potentially chunk this into bits to not overload server
             numBaseFiles = len(baseFiles)
+            totalSize = 0
             self.Output("Uploading base files...")
             for i in range (0, numBaseFiles):
                 self.Output("Uploading '{}'".format(baseFiles[i]))
                 try:
-                    self.MossUploadFile(baseFiles[i], 0)
+                    currentSize = self.MossUploadFile(baseFiles[i], 0)
+                    totalSize += currentSize
                 except Warning as warning:
                     self.OnWarning("WARNING: {}".format(str(warning)))
-
+            print("total size of base = " + str(totalSize))
+            totalSize = 0
             numStudentFiles = len(studentFiles)
             self.Output("Uploading student files...")
             for i in range (0, numStudentFiles):
                 self.Output("Uploading '{}'".format(studentFiles[i]))
                 try:
-                    self.MossUploadFile(studentFiles[i], i + 1)
+                    currentSize = self.MossUploadFile(studentFiles[i], i + 1)
+                    totalSize += currentSize
                 except Warning as warning:
                     self.OnWarning("WARNING: {}".format(str(warning)))
+            print("total size of student = " + str(totalSize))
 
             ###########################################
             # Request results
