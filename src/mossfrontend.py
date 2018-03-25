@@ -27,7 +27,7 @@ class MossThread(QtCore.QThread):
         client.comment = self.comment
         client.isComparingDirectories = self.isComparingDirectories
         client.isUsingExperimentalServer = 0
-        client.Run(self.studentFiles, self.baseFiles)
+        client.RunInChunks(self.studentFiles, self.baseFiles)
 
     #TO-DO: Test and ensure this will work correctly
     def saveQuery(self):
