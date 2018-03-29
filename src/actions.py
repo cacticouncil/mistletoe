@@ -8,6 +8,7 @@ import json
 import shared
 import webbrowser
 from mossfrontend import *
+import time
 
 import fileManagement
 
@@ -94,6 +95,37 @@ def moss_success(message):
 
 def runQueryButton_click():
     runMossAsync()
+
+def runQueryChunkButton_click():
+    count = 0
+    while (count < len(shared.allStudentFiles)):
+        current_size = 0
+        current_files = 0
+        toUpload = []
+        while ((current_size < shared.maxAllowedFiles) and (count < len(shared.allStudentFiles))):
+            toUpload.append(shared.allStudentFiles[count])
+            current_size += 1
+            count += 1
+        runMossChunkAsync(toUpload)
+        print(count)
+        time.sleep(5)
+    print("done running in chunks")
+
+def runQuery2ChunkButton_click():
+    count = 0
+    allToUpload = []
+    while (count < len(shared.allStudentFiles)):
+        current_size = 0
+        current_files = 0
+        toUpload = []
+        while ((current_size < shared.maxAllowedFiles) and (count < len(shared.allStudentFiles))):
+            toUpload.append(shared.allStudentFiles[count])
+            current_size += 1
+            count += 1
+        allToUpload.append(toUpload)
+        print(count)
+    runMossChunkAsync2(allToUpload)
+    print("done running in chunks")
 
 def saveQueryButton_click(): #TO-DO: Maybe clean this up? It currently works
     data = {}
@@ -203,7 +235,8 @@ def addFilesToList(listName, files):
     for filename in sourceFiles:
         if filename not in filesAlreadyInList:
             fileList.addItem(filename)
-
+        if filename not in shared.allStudentFiles:
+            shared.allStudentFiles.append(filename)
     if fileList.count() != 0:
         fileList.findChild(EtGui.EtLabel).hide()
 

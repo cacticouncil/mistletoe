@@ -27,7 +27,7 @@ class MossThread(QtCore.QThread):
         client.comment = self.comment
         client.isComparingDirectories = self.isComparingDirectories
         client.isUsingExperimentalServer = 0
-        client.RunInChunks(self.studentFiles, self.baseFiles)
+        client.Run(self.studentFiles, self.baseFiles)
 
     #TO-DO: Test and ensure this will work correctly
     def saveQuery(self):
@@ -77,3 +77,57 @@ def runMossAsync():
     workerThread.language = shared.mainWindow.findChild(QtGui.QComboBox, "languageBox").currentText()
     workerThread.comment = shared.mainWindow.findChild(QtGui.QLineEdit, "commentEdit").text()
     workerThread.start()
+
+def runMossChunkAsync(to_upload):
+    global workerThread
+
+    if workerThread is None:
+        workerThread = MossThread()
+        QtCore.QObject.connect(workerThread, QtCore.SIGNAL("OnOutput(QString)"), actions.moss_output)
+        QtCore.QObject.connect(workerThread, QtCore.SIGNAL("OnWarning(QString)"), actions.moss_warning)
+        QtCore.QObject.connect(workerThread, QtCore.SIGNAL("OnFailed(QString)"), actions.moss_failed)
+        QtCore.QObject.connect(workerThread, QtCore.SIGNAL("OnSuccess(QString)"), actions.moss_success)
+    elif not workerThread.isFinished():
+        print("Already running")
+        return
+
+    isComparingDirectories = 0
+    isUsingExperimentalServer = 0
+
+    if shared.mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").isChecked():
+        isComparingDirectories = 1
+    
+    workerThread.isComparingDirectories = isComparingDirectories;
+    workerThread.studentFiles = to_upload
+    workerThread.baseFiles = actions.getFilesFromList("baseFileList")
+    workerThread.maxMatchesPerPassage = shared.mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value()
+    workerThread.language = shared.mainWindow.findChild(QtGui.QComboBox, "languageBox").currentText()
+    workerThread.comment = shared.mainWindow.findChild(QtGui.QLineEdit, "commentEdit").text()
+    workerThread.start()
+
+def runMossChunkAsync2(to_upload):
+    global workerThread
+    size = len(to_upload)
+    count = -1
+    while (count < size - 1):
+        if (workerThread is None) or (workerThread.isFinished()):
+            workerThread = MossThread()
+            QtCore.QObject.connect(workerThread, QtCore.SIGNAL("OnOutput(QString)"), actions.moss_output)
+            QtCore.QObject.connect(workerThread, QtCore.SIGNAL("OnWarning(QString)"), actions.moss_warning)
+            QtCore.QObject.connect(workerThread, QtCore.SIGNAL("OnFailed(QString)"), actions.moss_failed)
+            QtCore.QObject.connect(workerThread, QtCore.SIGNAL("OnSuccess(QString)"), actions.moss_success)
+            count += 1
+            isComparingDirectories = 0
+            isUsingExperimentalServer = 0
+
+            if shared.mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").isChecked():
+                isComparingDirectories = 1
+            
+            workerThread.isComparingDirectories = isComparingDirectories;
+            workerThread.studentFiles = to_upload[count]
+            workerThread.baseFiles = actions.getFilesFromList("baseFileList")
+            workerThread.maxMatchesPerPassage = shared.mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value()
+            workerThread.language = shared.mainWindow.findChild(QtGui.QComboBox, "languageBox").currentText()
+            workerThread.comment = shared.mainWindow.findChild(QtGui.QLineEdit, "commentEdit").text()
+            workerThread.start()
+            print(count)

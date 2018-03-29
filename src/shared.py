@@ -17,3 +17,8 @@ configPath = getAppDataPath()
 # Allocate a configuration object and main window reference
 config = configparser.ConfigParser()
 mainWindow = None
+
+#new stuff
+allStudentFiles = []
+maxAllowedSize = 20000 #size in bytes
+maxAllowedFiles = 3 #max allowed files per chunk
