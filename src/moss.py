@@ -2,7 +2,7 @@ import socket
 import string
 import os
 import time
-
+import webbrowser
 class Client:
     def __init__(self):
         self.server = "moss.stanford.edu"
@@ -154,6 +154,7 @@ class Client:
             studentFiles: List of paths to student files to be sent to the server.
             baseFiles: List of paths to base files to be sent to the server.
         """
+        print("client is running")
         exceptioninfo = None
         if len(studentFiles) == 0:
             self.OnFailure("Missing student files.")
@@ -219,6 +220,8 @@ class Client:
                 return
             else:
                 self.OnSuccess(resultUrl)
+                print(resultUrl)
+                webbrowser.open(resultUrl)
                 return resultUrl
 
         except socket.timeout as ex:
