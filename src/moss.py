@@ -184,6 +184,7 @@ class Client:
             # TO-DO: Potentially chunk this into bits to not overload server
             numBaseFiles = len(baseFiles)
             totalSize = 0
+            print("sending files")
             self.Output("Uploading base files...")
             for i in range (0, numBaseFiles):
                 self.Output("Uploading '{}'".format(baseFiles[i]))
@@ -220,7 +221,6 @@ class Client:
                 return
             else:
                 self.OnSuccess(resultUrl)
-                print(resultUrl)
                 webbrowser.open(resultUrl)
                 return resultUrl
 
@@ -233,94 +233,4 @@ class Client:
         except Exception as ex:
             self.OnFailure("Unknown exception: {}".format(str(ex)))
 
-    def RunInChunks(self, studentFiles, baseFiles):
-        """ Connects to the MOSS server and waits for the server to compute the results.
-        Args:
-            studentFiles: List of paths to student files to be sent to the server.
-            baseFiles: List of paths to base files to be sent to the server.
-        """
-        exceptioninfo = None
-        if len(studentFiles) == 0:
-            self.OnFailure("Missing student files.")
-            return
-
-        try:
-            ###########################################
-            # Establish connection
-            ###########################################
-            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.sock.connect((self.server, self.port))
-
-            ###########################################
-            # Initialize MOSS session
-            ###########################################
-            self.MossSendHeader()
-            #self.Output("Verifying server supports language '{}'...".format(self.language))
-            #if not self.MossConfirmLanguage():
-            #    self.OnFailure("Language {} not supported".format(self.language))
-            #    self.MossEnd()
-            #    self.Shutdown()
-            #    return
-
-            ###########################################
-            # Upload our files
-            ###########################################
-            # TO-DO: Potentially chunk this into bits to not overload server
-            totalUploaded = 0
-            numberCompleted = 0
-            while (numberCompleted < len(studentFiles)):
-                numBaseFiles = len(baseFiles)
-                totalSize = 0
-                self.Output("Uploading base files...")
-                for i in range (0, numBaseFiles):
-                    self.Output("Uploading '{}'".format(baseFiles[i]))
-                    try:
-                        currentSize = self.MossUploadFile(baseFiles[i], 0)
-                        totalSize += currentSize
-                    except Warning as warning:
-                        self.OnWarning("WARNING: {}".format(str(warning)))
-                print("total size of base = " + str(totalSize))
-
-                totalSize = 0
-                currentChunk = 0
-                numStudentFiles = len(studentFiles)
-                self.Output("Uploading student files...")
-                while(((totalSize < 10000) or (currentChunk < 4)) and (totalUploaded < numStudentFiles)):
-                    self.Output("Uploading '{}'".format(studentFiles[totalUploaded]))
-                    try:
-                        currentSize = self.MossUploadFile(studentFiles[totalUploaded], totalUploaded + 1)
-                        totalSize += currentSize
-                        numberCompleted += 1
-                        totalUploaded += 1
-                        currentChunk += 1
-                    except Warning as warning:
-                        self.OnWarning("WARNING: {}".format(str(warning)))
-                print("total size of student = " + str(totalSize))
-
-                ###########################################
-                # Request results
-                ###########################################
-                self.MossSubmit()
-
-                self.Output("Query submitted. Waiting for the server's response.")
-                resultUrl = self.RecvLine()
-                self.Output("OK")
-                if len(resultUrl) == 0:
-                    self.OnFailure("Server failed return a result.")
-                    return
-                else:
-                    self.OnSuccess(resultUrl)
-                    result = resultUrl
-                    time.sleep(5)
-            
-            self.MossEnd()
-            self.Shutdown()
-            return resultUrl
-        except socket.timeout as ex:
-            self.OnFailure("Timed out connecting to server: {}".format(str(ex)))
-            return
-        except OSError as ex:
-            self.OnFailure("OS error: {} [{}]".format(str(ex), ex.errno))
-            return
-        except Exception as ex:
-            self.OnFailure("Unknown exception: {}".format(str(ex)))
+   

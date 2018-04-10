@@ -124,7 +124,14 @@ def runQuery2ChunkButton_click():
             count += 1
         allToUpload.append(toUpload)
         print(count)
-    runMossChunkAsync2(allToUpload)
+
+    count = 0   
+    for fileList in allToUpload:
+        print(count, "th list")
+        for file in fileList:
+            print(file)
+        count += 1
+    runMossChunkAsync3(allToUpload)
     print("done running in chunks")
 
 def saveQueryButton_click(): #TO-DO: Maybe clean this up? It currently works

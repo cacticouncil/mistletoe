@@ -70,7 +70,7 @@ def runMossAsync():
     if shared.mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").isChecked():
         isComparingDirectories = 1
     
-    workerThread.isComparingDirectories = isComparingDirectories;
+    workerThread.isComparingDirectories = isComparingDirectories
     workerThread.studentFiles = actions.getFilesFromList("studentFileList")
     workerThread.baseFiles = actions.getFilesFromList("baseFileList")
     workerThread.maxMatchesPerPassage = shared.mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value()
@@ -97,7 +97,7 @@ def runMossChunkAsync(to_upload):
     if shared.mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").isChecked():
         isComparingDirectories = 1
     
-    workerThread.isComparingDirectories = isComparingDirectories;
+    workerThread.isComparingDirectories = isComparingDirectories
     workerThread.studentFiles = to_upload
     workerThread.baseFiles = actions.getFilesFromList("baseFileList")
     workerThread.maxMatchesPerPassage = shared.mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value()
@@ -123,7 +123,7 @@ def runMossChunkAsync2(to_upload):
             if shared.mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").isChecked():
                 isComparingDirectories = 1
             
-            workerThread.isComparingDirectories = isComparingDirectories;
+            workerThread.isComparingDirectories = isComparingDirectories
             workerThread.studentFiles = to_upload[count]
             workerThread.baseFiles = actions.getFilesFromList("baseFileList")
             workerThread.maxMatchesPerPassage = shared.mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value()
@@ -131,3 +131,44 @@ def runMossChunkAsync2(to_upload):
             workerThread.comment = shared.mainWindow.findChild(QtGui.QLineEdit, "commentEdit").text()
             workerThread.start()
             print(count)
+
+def runMossChunkAsync3(to_upload):
+    global workerThread
+    size = len(to_upload)
+    currentIndex = 0
+    for fileList in to_upload:
+        count = currentIndex
+        print("current Index: ", currentIndex)
+        while (count < size - 1):
+            if (workerThread is None) or (workerThread.isFinished()):
+                workerThread = MossThread()
+                QtCore.QObject.connect(workerThread, QtCore.SIGNAL("OnOutput(QString)"), actions.moss_output)
+                QtCore.QObject.connect(workerThread, QtCore.SIGNAL("OnWarning(QString)"), actions.moss_warning)
+                QtCore.QObject.connect(workerThread, QtCore.SIGNAL("OnFailed(QString)"), actions.moss_failed)
+                QtCore.QObject.connect(workerThread, QtCore.SIGNAL("OnSuccess(QString)"), actions.moss_success)
+                isComparingDirectories = 0
+                isUsingExperimentalServer = 0
+
+                if shared.mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").isChecked():
+                    isComparingDirectories = 1
+                
+                workerThread.isComparingDirectories = isComparingDirectories
+                workerThread.studentFiles.clear()
+
+                for file in workerThread.studentFiles:
+                    print("before assign/append: ", file)
+                for file in fileList:
+                    workerThread.studentFiles.append(file)
+                for file in to_upload[count + 1]:
+                    workerThread.studentFiles.append(file)
+                    print("appending file: ", file)
+                for file in workerThread.studentFiles:
+                    print("uploading file: ", file)
+                workerThread.baseFiles = actions.getFilesFromList("baseFileList")
+                workerThread.maxMatchesPerPassage = shared.mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value()
+                workerThread.language = shared.mainWindow.findChild(QtGui.QComboBox, "languageBox").currentText()
+                workerThread.comment = shared.mainWindow.findChild(QtGui.QLineEdit, "commentEdit").text()
+                workerThread.start()
+                count += 1
+                print("current count:", count)
+        currentIndex += 1
