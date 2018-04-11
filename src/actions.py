@@ -92,7 +92,6 @@ def moss_failed(message):
 def moss_success(message):
     outputMessage("Result: <a href={}>{}</a>".format(message, message))
     outputMessage("Opening result in browser...")
-    webbrowser.open(message, new=2)
 
 def runQueryButton_click():
     runMossAsync()

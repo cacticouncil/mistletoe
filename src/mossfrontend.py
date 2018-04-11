@@ -157,8 +157,10 @@ def runMossChunkAsync3(to_upload):
 
                 for file in workerThread.studentFiles:
                     print("before assign/append: ", file)
+                #append current file chunk to current upload thread
                 for file in fileList:
                     workerThread.studentFiles.append(file)
+                #append next chunk to current upload thread
                 for file in to_upload[count + 1]:
                     workerThread.studentFiles.append(file)
                     print("appending file: ", file)

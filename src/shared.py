@@ -18,7 +18,7 @@ configPath = getAppDataPath()
 config = configparser.ConfigParser()
 mainWindow = None
 
-#new stuff
+# Shared information for uploading in chunks
 allStudentFiles = []
-maxAllowedSize = 20000 #size in bytes
-maxAllowedFiles = 3 #max allowed files per chunk
+maxAllowedSize = 200000 #size in bytes
+maxAllowedFiles = 4 #max allowed files per chunk
