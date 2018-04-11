@@ -68,6 +68,7 @@ def addSingleBaseButton_click(): #TO-DO: Create a button for this somewhere
 def clearStudentButton_click():
     shared.mainWindow.findChild(EtGui.EtListWidget, "studentFileList").clear()
     shared.mainWindow.findChild(EtGui.EtLabel, "studentDragLabel").show()
+    shared.allStudentFiles.clear()
 
 def addBaseButton_click():
     filePath = QtGui.QFileDialog.getExistingDirectory(None, "Select Base Source Folder to Add Files From", shared.addPath)
@@ -133,6 +134,7 @@ def runQuery2ChunkButton_click():
         count += 1
     runMossChunkAsync3(allToUpload)
     print("done running in chunks")
+    shared.allStudentFiles.clear()
 
 def saveQueryButton_click(): #TO-DO: Maybe clean this up? It currently works
     data = {}
@@ -256,7 +258,8 @@ def addFileToList(listName, file):
 
     if file not in filesAlreadyInList:
         fileList.addItem(file)
-
+    if filename not in shared.allStudentFiles:
+            shared.allStudentFiles.append(filename)
     if fileList.count() != 0:
         fileList.findChild(EtGui.EtLabel).hide()
 
