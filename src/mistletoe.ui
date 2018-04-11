@@ -680,7 +680,7 @@
       <rect>
        <x>15</x>
        <y>135</y>
-       <width>405</width>
+       <width>200</width>
        <height>45</height>
       </rect>
      </property>
@@ -691,6 +691,24 @@
      </property>
      <property name="text">
       <string>Run Query</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="runQueryChunkButton">
+     <property name="geometry">
+      <rect>
+       <x>220</x>
+       <y>135</y>
+       <width>200</width>
+       <height>45</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Run Query in Chunks</string>
      </property>
     </widget>
     <widget class="QPushButton" name="saveQueryButton">
