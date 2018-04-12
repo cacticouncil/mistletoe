@@ -254,11 +254,15 @@ def addFileToList(listName, file):
     ignoreFilter = shared.mainWindow.findChild(QtGui.QLineEdit, "ignoreEdit").text()
     filesAlreadyInList = getFilesFromList(listName)
     sourceFiles = []
-
-    if file not in filesAlreadyInList:
-        fileList.addItem(file)
-    if filename not in shared.allStudentFiles:
-            shared.allStudentFiles.append(filename)
+    files = []
+    files.append(file)
+    for file in files:
+        sourceFiles.extend(getFiles(file, addFilter, ignoreFilter))
+    for filename in sourceFiles:
+        if file not in filesAlreadyInList:
+            fileList.addItem(file)
+        if filename not in shared.allStudentFiles:
+                shared.allStudentFiles.append(filename)
     if fileList.count() != 0:
         fileList.findChild(EtGui.EtLabel).hide()
 
