@@ -20,5 +20,5 @@ mainWindow = None
 
 # Shared information for uploading in chunks
 allStudentFiles = []
-maxAllowedSize = 200000 #size in bytes
-maxAllowedFiles = 4 #max allowed files per chunk
+maxAllowedSize = 10000 #size in bytes
+maxAllowedFiles = 8 #max allowed files per chunk

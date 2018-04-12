@@ -113,14 +113,23 @@ def runQueryChunkButton_click():
 
 def runQuery2ChunkButton_click():
     count = 0
+    totalSize = 0
     allToUpload = []
     while (count < len(shared.allStudentFiles)):
         current_size = 0
         current_files = 0
+        totalSize = 0
         toUpload = []
-        while ((current_size < shared.maxAllowedFiles) and (count < len(shared.allStudentFiles))):
+        while ((current_size < shared.maxAllowedFiles) and (count < len(shared.allStudentFiles)) and (totalSize < shared.maxAllowedSize)):
             toUpload.append(shared.allStudentFiles[count])
             current_size += 1
+            try:
+                fileHandle = open(shared.allStudentFiles[count], 'r', encoding="utf-8") 
+                size = os.fstat(fileHandle.fileno()).st_size #TO-DO: Implement this as a check for file size (this gives file_size in bytes)
+                fileHandle.close()
+                totalSize += size
+            except Exception as ex:
+                raise RuntimeWarning('Error loading file ')
             count += 1
         allToUpload.append(toUpload)
         print(count)
