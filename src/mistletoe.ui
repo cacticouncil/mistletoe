@@ -593,12 +593,44 @@
       <number>10</number>
      </property>
     </widget>
+    <widget class="QSpinBox" name="fileSizeLimitBox">
+     <property name="geometry">
+      <rect>
+       <x>330</x>
+       <y>75</y>
+       <width>90</width>
+       <height>45</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="value">
+      <number>10000</number>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="fileNumberLimitBox">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>90</y>
+       <width>55</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="value">
+      <number>10000</number>
+     </property>
+    </widget>
     <widget class="QLineEdit" name="commentEdit">
      <property name="geometry">
       <rect>
-       <x>110</x>
+       <x>80</x>
        <y>90</y>
-       <width>310</width>
+       <width>50</width>
        <height>30</height>
       </rect>
      </property>
@@ -624,9 +656,9 @@
     <widget class="QLabel" name="ignoreCountLabel1">
      <property name="geometry">
       <rect>
-       <x>260</x>
+       <x>270</x>
        <y>20</y>
-       <width>120</width>
+       <width>90</width>
        <height>45</height>
       </rect>
      </property>
@@ -642,9 +674,9 @@
     <widget class="QLabel" name="ignoreCountLabel2">
      <property name="geometry">
       <rect>
-       <x>260</x>
+       <x>270</x>
        <y>40</y>
-       <width>120</width>
+       <width>90</width>
        <height>45</height>
       </rect>
      </property>
@@ -657,12 +689,84 @@
       <string>Count</string>
      </property>
     </widget>
-    <widget class="QLabel" name="comentLabel">
+    <widget class="QLabel" name="fileNumberLabel1">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>70</y>
+       <width>70</width>
+       <height>45</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>7</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>File Number</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="fileNumberLabel2">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>90</y>
+       <width>60</width>
+       <height>45</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>7</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Limit</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="fileSizeLabel1">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>70</y>
+       <width>90</width>
+       <height>45</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>7</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>File Size</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="fileSizeLabel2">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>90</y>
+       <width>90</width>
+       <height>45</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>7</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Limit</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="commentLabel">
      <property name="geometry">
       <rect>
        <x>15</x>
        <y>90</y>
-       <width>120</width>
+       <width>60</width>
        <height>30</height>
       </rect>
      </property>

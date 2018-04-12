@@ -52,6 +52,8 @@ def main():
     mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").setChecked(config.get("config", "UseDirectories").lower() == 'true')
     mainWindow.findChild(QtGui.QCheckBox, "runCheckBox").setChecked(config.get("config", "RunAfterAdd").lower() == 'true')
     mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").setValue(config.getint("config", "IgnoreCount"))
+    mainWindow.findChild(QtGui.QSpinBox, "fileSizeLimitBox").setMaximum(200000)
+    mainWindow.findChild(QtGui.QSpinBox, "fileNumberLimitBox").setMaximum(9999)
     mainWindow.findChild(QtGui.QLineEdit, "commentEdit").setText(config.get("config", "Comment"))
     languageBox = mainWindow.findChild(QtGui.QComboBox, "languageBox")
     languageBox.setCurrentIndex(languageBox.findText(config.get("config", "Language")))
