@@ -112,6 +112,10 @@ def runQueryChunkButton_click():
     print("done running in chunks")
 
 def runQuery2ChunkButton_click():
+    maxAllowedFiles = shared.mainWindow.findChild(QtGui.QSpinBox, "fileNumberLimitBox").value()
+    maxAllowedSize = shared.mainWindow.findChild(QtGui.QSpinBox, "fileSizeLimitBox").value()
+    print("max size allowed:", maxAllowedSize)
+    print("max files allowed:", maxAllowedFiles)
     count = 0
     totalSize = 0
     allToUpload = []
@@ -120,7 +124,7 @@ def runQuery2ChunkButton_click():
         current_files = 0
         totalSize = 0
         toUpload = []
-        while ((current_size < shared.maxAllowedFiles) and (count < len(shared.allStudentFiles)) and (totalSize < shared.maxAllowedSize)):
+        while ((current_size < maxAllowedFiles) and (count < len(shared.allStudentFiles)) and (totalSize < maxAllowedSize)):
             toUpload.append(shared.allStudentFiles[count])
             current_size += 1
             try:
@@ -140,9 +144,11 @@ def runQuery2ChunkButton_click():
         for file in fileList:
             print(file)
         count += 1
-    runMossChunkAsync3(allToUpload)
+    if len(allToUpload) == 1:
+        runMossAsync()
+    else:
+        runMossChunkAsync3(allToUpload)
     print("done running in chunks")
-    shared.allStudentFiles.clear()
 
 def saveQueryButton_click(): #TO-DO: Maybe clean this up? It currently works
     data = {}
