@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys, types, os
 
-from PySide import QtGui
+from PySide2 import QtWidgets
 import EtGui
 
 from actions import *
@@ -17,7 +17,7 @@ def main():
         datadir = os.path.dirname(__file__)
 
     # Create the app wrapper and main window
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     shared.mainWindow = EtGui.EtUiLoader().loadWidgetFile(os.path.join(datadir, shared.mainUiFile))
     shared.mainWindow.closeEvent = types.MethodType(mainWindow_close, shared.mainWindow)
     mainWindow = shared.mainWindow
@@ -30,36 +30,36 @@ def main():
 
     # If any options are not set, load the defaults.
     if not config.has_option("config","AddFilter"):
-        config.set("config","AddFilter", mainWindow.findChild(QtGui.QLineEdit, "filterEdit").text())
+        config.set("config","AddFilter", mainWindow.findChild(QtWidgets.QLineEdit, "filterEdit").text())
     if not config.has_option("config","IgnoreFilter"):
-        config.set("config","IgnoreFilter", mainWindow.findChild(QtGui.QLineEdit, "ignoreEdit").text())
+        config.set("config","IgnoreFilter", mainWindow.findChild(QtWidgets.QLineEdit, "ignoreEdit").text())
     if not config.has_option("config","UseDirectories"):
-        config.set("config", "UseDirectories", str(mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").isChecked()))
+        config.set("config", "UseDirectories", str(mainWindow.findChild(QtWidgets.QCheckBox, "dirCheckBox").isChecked()))
     if not config.has_option("config","RunAfterAdd"):
-        config.set("config", "RunAfterAdd", str(mainWindow.findChild(QtGui.QCheckBox, "runCheckBox").isChecked()))
+        config.set("config", "RunAfterAdd", str(mainWindow.findChild(QtWidgets.QCheckBox, "runCheckBox").isChecked()))
     if not config.has_option("config","Language"):
-        config.set("config","Language", mainWindow.findChild(QtGui.QComboBox, "languageBox").currentText())
+        config.set("config","Language", mainWindow.findChild(QtWidgets.QComboBox, "languageBox").currentText())
     if not config.has_option("config","IgnoreCount"):
-        config.set("config","IgnoreCount", str(mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value()))
+        config.set("config","IgnoreCount", str(mainWindow.findChild(QtWidgets.QSpinBox, "ignoreCountSpinBox").value()))
     if not config.has_option("config","Comment"):
-        config.set("config","Comment", mainWindow.findChild(QtGui.QLineEdit, "commentEdit").text())
+        config.set("config","Comment", mainWindow.findChild(QtWidgets.QLineEdit, "commentEdit").text())
     if not config.has_option("config", "AddPath"):
         config.set("config", "AddPath", shared.addPath)
 
     # Set the Gui to match the configuration
-    mainWindow.findChild(QtGui.QLineEdit, "filterEdit").setText(config.get("config", "AddFilter"))
-    mainWindow.findChild(QtGui.QLineEdit, "ignoreEdit").setText(config.get("config", "IgnoreFilter"))
-    mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").setChecked(config.get("config", "UseDirectories").lower() == 'true')
-    mainWindow.findChild(QtGui.QCheckBox, "runCheckBox").setChecked(config.get("config", "RunAfterAdd").lower() == 'true')
-    mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").setValue(config.getint("config", "IgnoreCount"))
-    mainWindow.findChild(QtGui.QLineEdit, "commentEdit").setText(config.get("config", "Comment"))
-    languageBox = mainWindow.findChild(QtGui.QComboBox, "languageBox")
+    mainWindow.findChild(QtWidgets.QLineEdit, "filterEdit").setText(config.get("config", "AddFilter"))
+    mainWindow.findChild(QtWidgets.QLineEdit, "ignoreEdit").setText(config.get("config", "IgnoreFilter"))
+    mainWindow.findChild(QtWidgets.QCheckBox, "dirCheckBox").setChecked(config.get("config", "UseDirectories").lower() == 'true')
+    mainWindow.findChild(QtWidgets.QCheckBox, "runCheckBox").setChecked(config.get("config", "RunAfterAdd").lower() == 'true')
+    mainWindow.findChild(QtWidgets.QSpinBox, "ignoreCountSpinBox").setValue(config.getint("config", "IgnoreCount"))
+    mainWindow.findChild(QtWidgets.QLineEdit, "commentEdit").setText(config.get("config", "Comment"))
+    languageBox = mainWindow.findChild(QtWidgets.QComboBox, "languageBox")
     languageBox.setCurrentIndex(languageBox.findText(config.get("config", "Language")))
     shared.addPath = config.get("config", "AddPath")
 
     # Connect Gui buttons to actions
-    mainWindow.findChild(QtGui.QAction, "actionExit").triggered.connect(actionExit_trigger)
-    mainWindow.findChild(QtGui.QAction, "actionSettings").triggered.connect(actionSettings_trigger)
+    mainWindow.findChild(QtWidgets.QAction, "actionExit").triggered.connect(actionExit_trigger)
+    mainWindow.findChild(QtWidgets.QAction, "actionSettings").triggered.connect(actionSettings_trigger)
 
     studentFileList = mainWindow.findChild(EtGui.EtListWidget, "studentFileList")
     studentFileList.dragEnterEvent = studentFileList.dragMoveEvent = types.MethodType(fileList_drag, studentFileList)
@@ -71,19 +71,19 @@ def main():
     baseFileList.dropEvent = types.MethodType(fileList_drop, baseFileList)
     baseFileList.setAcceptDrops(True)
 
-    mainWindow.findChild(QtGui.QPushButton, "addStudentButton").clicked.connect(addStudentButton_click)
-    mainWindow.findChild(QtGui.QPushButton, "clearStudentButton").clicked.connect(clearStudentButton_click)
-    mainWindow.findChild(QtGui.QPushButton, "addBaseButton").clicked.connect(addBaseButton_click)
-    mainWindow.findChild(QtGui.QPushButton, "clearBaseButton").clicked.connect(clearBaseButton_click)
+    mainWindow.findChild(QtWidgets.QPushButton, "addStudentButton").clicked.connect(addStudentButton_click)
+    mainWindow.findChild(QtWidgets.QPushButton, "clearStudentButton").clicked.connect(clearStudentButton_click)
+    mainWindow.findChild(QtWidgets.QPushButton, "addBaseButton").clicked.connect(addBaseButton_click)
+    mainWindow.findChild(QtWidgets.QPushButton, "clearBaseButton").clicked.connect(clearBaseButton_click)
 
-    mainWindow.findChild(QtGui.QPushButton, "runQueryButton").clicked.connect(runQueryButton_click)
-    mainWindow.findChild(QtGui.QPushButton, "runQueryChunkButton").clicked.connect(runQuery2ChunkButton_click)
-    mainWindow.findChild(QtGui.QPushButton, "saveQueryButton").clicked.connect(saveQueryButton_click)
-    mainWindow.findChild(QtGui.QPushButton, "clearQueryButton").clicked.connect(loadQueryButton_click) #TO-DO: make this load query button?
-    mainWindow.findChild(QtGui.QPushButton, "saveOutputButton").clicked.connect(saveOutputButton_click)
-    mainWindow.findChild(QtGui.QPushButton, "clearOutputButton").clicked.connect(clearOutputButton_click)
-    mainWindow.findChild(QtGui.QPushButton, "addSingleStudentButton").clicked.connect(addSingleStudentButton_click)
-    mainWindow.findChild(QtGui.QPushButton, "addSingleBaseButton").clicked.connect(addSingleBaseButton_click)
+    mainWindow.findChild(QtWidgets.QPushButton, "runQueryButton").clicked.connect(runQueryButton_click)
+    mainWindow.findChild(QtWidgets.QPushButton, "runQueryChunkButton").clicked.connect(runQuery2ChunkButton_click)
+    mainWindow.findChild(QtWidgets.QPushButton, "saveQueryButton").clicked.connect(saveQueryButton_click)
+    mainWindow.findChild(QtWidgets.QPushButton, "clearQueryButton").clicked.connect(loadQueryButton_click) #TO-DO: make this load query button?
+    mainWindow.findChild(QtWidgets.QPushButton, "saveOutputButton").clicked.connect(saveOutputButton_click)
+    mainWindow.findChild(QtWidgets.QPushButton, "clearOutputButton").clicked.connect(clearOutputButton_click)
+    mainWindow.findChild(QtWidgets.QPushButton, "addSingleStudentButton").clicked.connect(addSingleStudentButton_click)
+    mainWindow.findChild(QtWidgets.QPushButton, "addSingleBaseButton").clicked.connect(addSingleBaseButton_click)
 
     # Launch the Gui
     mainWindow.show()

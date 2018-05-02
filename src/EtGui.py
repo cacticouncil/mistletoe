@@ -18,7 +18,7 @@ This file is part of the EdTech library project at Full Sail University.
 '''
 # -*- coding: utf-8 -*-
 
-from PySide import QtGui, QtCore, QtUiTools
+from PySide2 import QtWidgets, QtCore, QtUiTools
 import string
 
 def ignoreEvent(self, event):
@@ -27,18 +27,18 @@ def ignoreEvent(self, event):
 def acceptEvent(self, event):
     event.ignore()
 
-QtGui.QWidget.dragEnterEvent = QtGui.QWidget.dragMoveEvent = QtGui.QWidget.dragLeaveEvent = QtGui.QWidget.dropEvent = ignoreEvent
-QtGui.QWidget.hideEvent = QtGui.QWidget.showEvent = QtGui.QWidget.closeEvent = acceptEvent
+QtWidgets.QWidget.dragEnterEvent = QtWidgets.QWidget.dragMoveEvent = QtWidgets.QWidget.dragLeaveEvent = QtWidgets.QWidget.dropEvent = ignoreEvent
+QtWidgets.QWidget.hideEvent = QtWidgets.QWidget.showEvent = QtWidgets.QWidget.closeEvent = acceptEvent
 
-class EtMainWindow(QtGui.QMainWindow):
+class EtMainWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None, flags=0):
         super(EtMainWindow, self).__init__(parent, flags)
     
-class EtListWidget(QtGui.QListWidget):
+class EtListWidget(QtWidgets.QListWidget):
     def __init__(self, parent=None):
         super(EtListWidget, self).__init__(parent)
 
-class EtLabel(QtGui.QLabel):
+class EtLabel(QtWidgets.QLabel):
     def __init(self, parent=None):
         super(EtLabel, self).__init__(parent)
         self.setAcceptDrops(True)
@@ -66,7 +66,7 @@ class EtUiLoader(QtUiTools.QUiLoader):
         uiFile.close()
         return widget
 
-#class EtApp(QtGui.QApplication):
+#class EtApp(QtWidgets.QApplication):
 #    def __init__(self, argv, widget=None):
 #        super(EtApp, self).__init__(argv)
 #        if not widget == None:

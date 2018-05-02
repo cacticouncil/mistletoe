@@ -1,5 +1,5 @@
-from PySide import QtGui
-from PySide import QtCore
+from PySide2 import QtWidgets
+from PySide2 import QtCore
 import actions
 import shared
 import moss
@@ -67,15 +67,15 @@ def runMossAsync():
     isComparingDirectories = 0
     isUsingExperimentalServer = 0
 
-    if shared.mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").isChecked():
+    if shared.mainWindow.findChild(QtWidgets.QCheckBox, "dirCheckBox").isChecked():
         isComparingDirectories = 1
     
     workerThread.isComparingDirectories = isComparingDirectories
     workerThread.studentFiles = actions.getFilesFromList("studentFileList")
     workerThread.baseFiles = actions.getFilesFromList("baseFileList")
-    workerThread.maxMatchesPerPassage = shared.mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value()
-    workerThread.language = shared.mainWindow.findChild(QtGui.QComboBox, "languageBox").currentText()
-    workerThread.comment = shared.mainWindow.findChild(QtGui.QLineEdit, "commentEdit").text()
+    workerThread.maxMatchesPerPassage = shared.mainWindow.findChild(QtWidgets.QSpinBox, "ignoreCountSpinBox").value()
+    workerThread.language = shared.mainWindow.findChild(QtWidgets.QComboBox, "languageBox").currentText()
+    workerThread.comment = shared.mainWindow.findChild(QtWidgets.QLineEdit, "commentEdit").text()
     workerThread.start()
 
 def runMossChunkAsync(to_upload):
@@ -94,15 +94,15 @@ def runMossChunkAsync(to_upload):
     isComparingDirectories = 0
     isUsingExperimentalServer = 0
 
-    if shared.mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").isChecked():
+    if shared.mainWindow.findChild(QtWidgets.QCheckBox, "dirCheckBox").isChecked():
         isComparingDirectories = 1
     
     workerThread.isComparingDirectories = isComparingDirectories
     workerThread.studentFiles = to_upload
     workerThread.baseFiles = actions.getFilesFromList("baseFileList")
-    workerThread.maxMatchesPerPassage = shared.mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value()
-    workerThread.language = shared.mainWindow.findChild(QtGui.QComboBox, "languageBox").currentText()
-    workerThread.comment = shared.mainWindow.findChild(QtGui.QLineEdit, "commentEdit").text()
+    workerThread.maxMatchesPerPassage = shared.mainWindow.findChild(QtWidgets.QSpinBox, "ignoreCountSpinBox").value()
+    workerThread.language = shared.mainWindow.findChild(QtWidgets.QComboBox, "languageBox").currentText()
+    workerThread.comment = shared.mainWindow.findChild(QtWidgets.QLineEdit, "commentEdit").text()
     workerThread.start()
 
 def runMossChunkAsync2(to_upload):
@@ -120,15 +120,15 @@ def runMossChunkAsync2(to_upload):
             isComparingDirectories = 0
             isUsingExperimentalServer = 0
 
-            if shared.mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").isChecked():
+            if shared.mainWindow.findChild(QtWidgets.QCheckBox, "dirCheckBox").isChecked():
                 isComparingDirectories = 1
             
             workerThread.isComparingDirectories = isComparingDirectories
             workerThread.studentFiles = to_upload[count]
             workerThread.baseFiles = actions.getFilesFromList("baseFileList")
-            workerThread.maxMatchesPerPassage = shared.mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value()
-            workerThread.language = shared.mainWindow.findChild(QtGui.QComboBox, "languageBox").currentText()
-            workerThread.comment = shared.mainWindow.findChild(QtGui.QLineEdit, "commentEdit").text()
+            workerThread.maxMatchesPerPassage = shared.mainWindow.findChild(QtWidgets.QSpinBox, "ignoreCountSpinBox").value()
+            workerThread.language = shared.mainWindow.findChild(QtWidgets.QComboBox, "languageBox").currentText()
+            workerThread.comment = shared.mainWindow.findChild(QtWidgets.QLineEdit, "commentEdit").text()
             workerThread.start()
             print(count)
 
@@ -149,7 +149,7 @@ def runMossChunkAsync3(to_upload):
                 isComparingDirectories = 0
                 isUsingExperimentalServer = 0
 
-                if shared.mainWindow.findChild(QtGui.QCheckBox, "dirCheckBox").isChecked():
+                if shared.mainWindow.findChild(QtWidgets.QCheckBox, "dirCheckBox").isChecked():
                     isComparingDirectories = 1
                 
                 workerThread.isComparingDirectories = isComparingDirectories
@@ -167,9 +167,9 @@ def runMossChunkAsync3(to_upload):
                 for file in workerThread.studentFiles:
                     print("uploading file: ", file)
                 workerThread.baseFiles = actions.getFilesFromList("baseFileList")
-                workerThread.maxMatchesPerPassage = shared.mainWindow.findChild(QtGui.QSpinBox, "ignoreCountSpinBox").value()
-                workerThread.language = shared.mainWindow.findChild(QtGui.QComboBox, "languageBox").currentText()
-                workerThread.comment = shared.mainWindow.findChild(QtGui.QLineEdit, "commentEdit").text()
+                workerThread.maxMatchesPerPassage = shared.mainWindow.findChild(QtWidgets.QSpinBox, "ignoreCountSpinBox").value()
+                workerThread.language = shared.mainWindow.findChild(QtWidgets.QComboBox, "languageBox").currentText()
+                workerThread.comment = shared.mainWindow.findChild(QtWidgets.QLineEdit, "commentEdit").text()
                 workerThread.start()
                 count += 1
                 print("current count:", count)
